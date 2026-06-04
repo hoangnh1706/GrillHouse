@@ -1,0 +1,152 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thanh toán – BếpNướng</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:#111;color:#e5e5e5;font-family:'DM Sans',sans-serif;}
+    .container{max-width:960px;margin:2rem auto;padding:0 1.5rem;display:grid;grid-template-columns:1fr 380px;gap:2rem;}
+    @media(max-width:768px){.container{grid-template-columns:1fr;}}
+    h1{font-family:'Playfair Display',serif;color:#f97316;font-size:1.8rem;margin-bottom:1.5rem;grid-column:1/-1;}
+    .card{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:14px;padding:1.5rem;}
+    .card h2{font-size:1rem;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1.2rem;}
+    label{display:block;font-size:.85rem;color:#999;margin-bottom:.35rem;font-weight:500;}
+    input,select,textarea{
+      width:100%;padding:.7rem 1rem;background:#252525;
+      border:1.5px solid #333;border-radius:8px;color:#eee;
+      font-size:.95rem;font-family:inherit;outline:none;
+      transition:border .2s;margin-bottom:1.1rem;
+    }
+    input:focus,select:focus,textarea:focus{border-color:#f97316;}
+    textarea{resize:vertical;min-height:80px;}
+    select option{background:#252525;}
+    .error{background:#3b1a1a;border:1px solid #7f1d1d;color:#fca5a5;
+      border-radius:8px;padding:.75rem 1rem;font-size:.88rem;margin-bottom:1.2rem;}
+
+    /* Order summary */
+    .order-item{display:flex;justify-content:space-between;align-items:center;
+      padding:.6rem 0;border-bottom:1px solid #222;font-size:.9rem;}
+    .order-item:last-child{border:none;}
+    .item-name{color:#ddd;}
+    .item-qty{color:#777;font-size:.82rem;}
+    .item-price{color:#f97316;font-weight:600;}
+    .summary-line{display:flex;justify-content:space-between;padding:.5rem 0;color:#aaa;font-size:.9rem;}
+    .summary-total{display:flex;justify-content:space-between;
+      border-top:1px solid #2a2a2a;padding-top:.75rem;margin-top:.5rem;
+      font-size:1.2rem;font-weight:700;color:#f97316;}
+    .discount-badge{background:#14532d;color:#86efac;font-size:.78rem;
+      padding:.2rem .5rem;border-radius:4px;margin-left:.4rem;}
+
+    .btn-submit{
+      width:100%;padding:.9rem;background:#f97316;border:none;
+      border-radius:10px;color:#fff;font-size:1rem;font-weight:700;
+      cursor:pointer;font-family:inherit;transition:background .2s;margin-top:1.2rem;
+    }
+    .btn-submit:hover{background:#ea6a05;}
+
+    /* Payment options */
+    .pay-opts{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.1rem;}
+    .pay-opt{
+      display:flex;align-items:center;gap:.75rem;
+      background:#252525;border:1.5px solid #333;border-radius:8px;
+      padding:.65rem 1rem;cursor:pointer;transition:border .2s;
+    }
+    .pay-opt:has(input:checked){border-color:#f97316;background:#2d1800;}
+    .pay-opt input{width:auto;margin:0;accent-color:#f97316;}
+    .pay-opt span{font-size:.9rem;}
+  </style>
+</head>
+<body>
+<%@ include file="/views/common/header.jsp" %>
+
+<div style="max-width:960px;margin:2rem auto;padding:0 1.5rem;">
+  <h1 style="font-family:'Playfair Display',serif;color:#f97316;font-size:1.8rem;margin-bottom:1.5rem;">📦 Thanh toán</h1>
+  <c:if test="${not empty error}">
+    <div class="error">⚠️ ${error}</div>
+  </c:if>
+</div>
+
+<div class="container" style="margin-top:0;">
+  <!-- Form thông tin giao hàng -->
+  <form action="${pageContext.request.contextPath}/checkout" method="post">
+    <div class="card">
+      <h2>📍 Thông tin giao hàng</h2>
+
+      <label>Họ và tên người nhận</label>
+      <input type="text" name="receiverName" value="${sessionScope.account.fullName}" required>
+
+      <label>Số điện thoại *</label>
+      <input type="tel" name="phone" value="${sessionScope.account.phone}" placeholder="0901234567" required>
+
+      <label>Địa chỉ giao hàng *</label>
+      <input type="text" name="shipAddress" value="${sessionScope.account.address}" placeholder="Số nhà, đường, phường, quận..." required>
+
+      <label>Ghi chú (tùy chọn)</label>
+      <textarea name="note" placeholder="Ví dụ: Gọi trước 10 phút, không cay..."></textarea>
+
+      <h2 style="margin-top:.5rem;">💳 Phương thức thanh toán</h2>
+      <div class="pay-opts">
+        <label class="pay-opt">
+          <input type="radio" name="paymentMethod" value="Tiền mặt" checked>
+          <span>💵 Thanh toán khi nhận hàng (COD)</span>
+        </label>
+        <label class="pay-opt">
+          <input type="radio" name="paymentMethod" value="VNPay">
+          <span>🏦 Chuyển khoản VNPay</span>
+        </label>
+        <label class="pay-opt">
+          <input type="radio" name="paymentMethod" value="Momo">
+          <span>💜 Ví MoMo</span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-submit">✅ Xác nhận đặt hàng</button>
+    </div>
+  </form>
+
+  <!-- Tóm tắt đơn hàng -->
+  <div>
+    <div class="card">
+      <h2>🧾 Đơn hàng của bạn</h2>
+      <c:forEach var="item" items="${sessionScope.cart.items}">
+        <div class="order-item">
+          <div>
+            <div class="item-name">${item.productName}</div>
+            <div class="item-qty">x${item.quantity}</div>
+          </div>
+          <div class="item-price"><fmt:formatNumber value="${item.subtotal}" pattern="#,###"/>đ</div>
+        </div>
+      </c:forEach>
+
+      <div style="margin-top:.75rem;">
+        <div class="summary-line">
+          <span>Tạm tính</span>
+          <span><fmt:formatNumber value="${sessionScope.cart.total}" pattern="#,###"/>đ</span>
+        </div>
+        <c:if test="${sessionScope.cart.totalDouble >= 500000}">
+          <div class="summary-line" style="color:#86efac;">
+            <span>Giảm giá 10% <span class="discount-badge">-10%</span></span>
+            <span>−<fmt:formatNumber value="${sessionScope.cart.discount}" pattern="#,###"/>đ</span>
+          </div>
+        </c:if>
+        <div class="summary-line"><span>Phí giao hàng</span><span style="color:#86efac;">Miễn phí</span></div>
+        <div class="summary-total">
+          <span>Tổng cộng</span>
+          <span><fmt:formatNumber value="${sessionScope.cart.finalTotal}" pattern="#,###"/>đ</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1rem;color:#555;font-size:.82rem;line-height:1.6;padding:0 .25rem;">
+      🔒 Thông tin của bạn được bảo mật an toàn.<br>
+      📞 Hotline: <span style="color:#f97316;">1900 1234</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
