@@ -17,19 +17,19 @@ public class OrderDAO extends DBContext {
             conn.setAutoCommit(false); // bắt đầu Transaction
 
             // 1. Insert Order
+            // FinalAmount là computed column (TotalAmount - DiscountAmount), không INSERT trực tiếp
             String sqlOrder =
-                "INSERT INTO [Order](AccountID,TotalAmount,DiscountAmount,FinalAmount,ShipAddress,Phone,Note,PaymentMethod) " +
-                "VALUES(?,?,?,?,?,?,?,?)";
+                "INSERT INTO [Order](AccountID,TotalAmount,DiscountAmount,ShipAddress,Phone,Note,PaymentMethod) " +
+                "VALUES(?,?,?,?,?,?,?)";
             int orderID;
             try (PreparedStatement ps = conn.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, order.getAccountID());
                 ps.setBigDecimal(2, cart.getTotal());
                 ps.setBigDecimal(3, cart.getDiscount());
-                ps.setBigDecimal(4, cart.getFinalTotal());
-                ps.setString(5, order.getShipAddress());
-                ps.setString(6, order.getPhone());
-                ps.setString(7, order.getNote());
-                ps.setString(8, order.getPaymentMethod());
+                ps.setString(4, order.getShipAddress());
+                ps.setString(5, order.getPhone());
+                ps.setString(6, order.getNote());
+                ps.setString(7, order.getPaymentMethod());
                 ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();
                 keys.next();

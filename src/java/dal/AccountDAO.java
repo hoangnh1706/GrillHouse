@@ -1,7 +1,7 @@
 package dal;
 
-import model.Account;
 import java.sql.*;
+import model.Account;
 
 public class AccountDAO extends DBContext {
 
@@ -83,6 +83,45 @@ public class AccountDAO extends DBContext {
             ps.setInt(5, a.getAccountID());
             return ps.executeUpdate() > 0;
         }
+    }
+
+    /**
+     * Đổi mật khẩu — kiểm tra mật khẩu cũ trước
+     * Trả về true nếu thành công, false nếu mật khẩu cũ sai
+     */
+    public boolean changePassword(int accountID, String oldHashedPw, String newHashedPw) throws SQLException {
+        // Xác nhận mật khẩu cũ đúng
+        String sqlCheck = "SELECT COUNT(*) FROM Account WHERE AccountID=? AND Password=?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlCheck)) {
+            ps.setInt(1, accountID);
+            ps.setString(2, oldHashedPw);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            if (rs.getInt(1) == 0) return false; // mật khẩu cũ sai
+        }
+        // Cập nhật mật khẩu mới
+        String sqlUpdate = "UPDATE Account SET Password=? WHERE AccountID=?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlUpdate)) {
+            ps.setString(1, newHashedPw);
+            ps.setInt(2, accountID);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    /**
+     * Lấy thông tin account theo ID (để refresh session sau khi update)
+     */
+    public Account getByID(int accountID) throws SQLException {
+        String sql = "SELECT * FROM Account WHERE AccountID=?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, accountID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return mapRow(rs);
+        }
+        return null;
     }
 
     // ---- helper ----
