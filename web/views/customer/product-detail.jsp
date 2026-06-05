@@ -6,7 +6,7 @@
 
       <head>
         <meta charset="UTF-8">
-        <title>${product.productName} – BếpNướng</title>
+        <title>${product.productName} – GrillHouse</title>
         <link
           href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
           rel="stylesheet">
@@ -236,6 +236,183 @@
           .back:hover {
             color: #f97316;
           }
+
+          /* ── REVIEW SECTION ── */
+          .review-section {
+            margin-top: 3rem;
+          }
+
+          .review-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: #f0f0f0;
+            margin-bottom: 1.5rem;
+            padding-bottom: .75rem;
+            border-bottom: 1px solid #2a2a2a;
+          }
+
+          .review-form {
+            background: #1c1c1c;
+            border: 1px solid #2a2a2a;
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+          }
+
+          .review-form h3 {
+            font-size: 1rem;
+            color: #f97316;
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+          }
+
+          .star-row {
+            display: flex;
+            gap: .3rem;
+            margin-bottom: 1.1rem;
+          }
+
+          .star-row input[type=radio] {
+            display: none;
+          }
+
+          .star-row label {
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: #333;
+            transition: color .15s;
+          }
+
+          .star-row {
+            flex-direction: row-reverse;
+          }
+
+          .star-row label:hover,
+          .star-row label:hover~label,
+          .star-row input[type=radio]:checked~label {
+            color: #fbbf24;
+          }
+
+          .review-form textarea {
+            width: 100%;
+            padding: .75rem 1rem;
+            background: #252525;
+            border: 1.5px solid #333;
+            border-radius: 8px;
+            color: #eee;
+            font-size: .9rem;
+            font-family: inherit;
+            outline: none;
+            resize: vertical;
+            min-height: 90px;
+            margin-bottom: 1rem;
+            transition: border .2s;
+          }
+
+          .review-form textarea:focus {
+            border-color: #f97316;
+          }
+
+          .btn-review {
+            background: #f97316;
+            color: #fff;
+            padding: .65rem 1.6rem;
+            border: none;
+            border-radius: 8px;
+            font-size: .9rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background .2s;
+          }
+
+          .btn-review:hover {
+            background: #ea6a05;
+          }
+
+          .notice {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 2rem;
+            font-size: .88rem;
+            color: #777;
+          }
+
+          .notice a {
+            color: #f97316;
+          }
+
+          .alert-success {
+            background: #14532d;
+            border: 1px solid #166534;
+            color: #86efac;
+            border-radius: 8px;
+            padding: .7rem 1rem;
+            margin-bottom: 1.2rem;
+            font-size: .88rem;
+          }
+
+          .alert-error {
+            background: #3b1a1a;
+            border: 1px solid #7f1d1d;
+            color: #fca5a5;
+            border-radius: 8px;
+            padding: .7rem 1rem;
+            margin-bottom: 1.2rem;
+            font-size: .88rem;
+          }
+
+          .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+          }
+
+          .review-item {
+            background: #1a1a1a;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.25rem;
+          }
+
+          .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: .6rem;
+          }
+
+          .reviewer-name {
+            font-weight: 600;
+            color: #eee;
+            font-size: .92rem;
+          }
+
+          .review-date {
+            font-size: .78rem;
+            color: #555;
+          }
+
+          .review-stars {
+            color: #fbbf24;
+            font-size: .95rem;
+            margin-bottom: .5rem;
+          }
+
+          .review-comment {
+            color: #aaa;
+            font-size: .88rem;
+            line-height: 1.6;
+          }
+
+          .no-reviews {
+            color: #555;
+            font-size: .9rem;
+            text-align: center;
+            padding: 2rem;
+          }
         </style>
       </head>
 
@@ -317,13 +494,87 @@
                     </div>
                   </div>
 
-                  <button type="submit" class="btn-add" <c:if test="${!product.inStock}">disabled</c:if>>
-                    🛒 Thêm vào giỏ hàng
-                  </button>
+                  <c:choose>
+                    <c:when test="${not empty sessionScope.account}">
+                      <button type="submit" class="btn-add" <c:if test="${!product.inStock}">disabled</c:if>>
+                        🛒 Thêm vào giỏ hàng
+                      </button>
+                    </c:when>
+                    <c:otherwise>
+                      <a href="${pageContext.request.contextPath}/login?redirect=product%3Fid%3D${product.productID}"
+                        class="btn-add" style="display:block;text-align:center;text-decoration:none;">
+                        🔑 Đăng nhập để thêm vào giỏ hàng
+                      </a>
+                    </c:otherwise>
+                  </c:choose>
                 </form>
 
                 <a href="javascript:history.back()" class="back">← Quay lại</a>
               </div>
+            </div>
+
+            <!-- REVIEW SECTION -->
+            <div class="review-section">
+              <h2>⭐ Đánh giá sản phẩm</h2>
+
+              <!-- Thông báo -->
+              <c:if test="${param.reviewSuccess == '1'}">
+                <div class="alert-success">✅ Cảm ơn bạn đã đánh giá!</div>
+              </c:if>
+              <c:if test="${param.reviewError == 'alreadyReviewed'}">
+                <div class="alert-error">⚠️ Bạn đã đánh giá sản phẩm này rồi.</div>
+              </c:if>
+              <c:if test="${param.reviewError == 'notPurchased'}">
+                <div class="alert-error">⚠️ Bạn cần mua và nhận hàng thành công mới được đánh giá.</div>
+              </c:if>
+
+              <!-- Form đánh giá (chỉ hiện nếu canReview = true) -->
+              <c:if test="${canReview == true}">
+                <div class="review-form">
+                  <h3>✍️ Viết đánh giá của bạn</h3>
+                  <form action="${pageContext.request.contextPath}/review" method="post">
+                    <input type="hidden" name="productID" value="${product.productID}">
+                    <div class="star-row">
+                      <input type="radio" id="s5" name="rating" value="5"><label for="s5" title="5 sao">★</label>
+                      <input type="radio" id="s4" name="rating" value="4"><label for="s4" title="4 sao">★</label>
+                      <input type="radio" id="s3" name="rating" value="3" checked><label for="s3"
+                        title="3 sao">★</label>
+                      <input type="radio" id="s2" name="rating" value="2"><label for="s2" title="2 sao">★</label>
+                      <input type="radio" id="s1" name="rating" value="1"><label for="s1" title="1 sao">★</label>
+                    </div>
+                    <textarea name="comment" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."></textarea>
+                    <button type="submit" class="btn-review">Gửi đánh giá</button>
+                  </form>
+                </div>
+              </c:if>
+
+              <!-- Danh sách đánh giá -->
+              <c:choose>
+                <c:when test="${empty reviews}">
+                  <div class="no-reviews">Chưa có đánh giá nào. Hãy là người đầu tiên!</div>
+                </c:when>
+                <c:otherwise>
+                  <div class="review-list">
+                    <c:forEach var="rv" items="${reviews}">
+                      <div class="review-item">
+                        <div class="review-header">
+                          <span class="reviewer-name">👤 ${rv.reviewerName}</span>
+                          <span class="review-date">
+                            <fmt:formatDate value="${rv.createdAt}" pattern="dd/MM/yyyy HH:mm" />
+                          </span>
+                        </div>
+                        <div class="review-stars">
+                          <c:forEach begin="1" end="${rv.rating}" var="i">★</c:forEach>
+                          <c:forEach begin="${rv.rating + 1}" end="5" var="i">☆</c:forEach>
+                        </div>
+                        <c:if test="${not empty rv.comment}">
+                          <div class="review-comment">${rv.comment}</div>
+                        </c:if>
+                      </div>
+                    </c:forEach>
+                  </div>
+                </c:otherwise>
+              </c:choose>
             </div>
           </div>
 

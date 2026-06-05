@@ -6,7 +6,7 @@
 
       <head>
         <meta charset="UTF-8">
-        <title>Thanh toán - BepNuong</title>
+        <title>Thanh toán - GrillHouse</title>
         <link
           href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap"
           rel="stylesheet">
@@ -228,7 +228,7 @@
           <div class="container" style="margin-top:0;">
 
             <!-- Form thong tin giao hang -->
-            <form action="${pageContext.request.contextPath}/checkout" method="post">
+            <form id="orderForm" action="${pageContext.request.contextPath}/checkout" method="post">
               <div class="card">
                 <h2>Thong tin giao hang</h2>
 
@@ -255,13 +255,9 @@
                     <input type="radio" name="paymentMethod" value="VNPay">
                     <span>Chuyen khoan VNPay</span>
                   </label>
-                  <label class="pay-opt">
-                    <input type="radio" name="paymentMethod" value="Momo">
-                    <span>Vi MoMo</span>
-                  </label>
                 </div>
 
-                <button type="submit" class="btn-submit">Xac nhan dat hang</button>
+                <button type="button" class="btn-submit" onclick="submitOrder()">Xac nhan dat hang</button>
               </div>
             </form>
 
@@ -329,17 +325,17 @@
               });
             }
           </script>
-          
+
           <script>
-function submitOrder(){
-  var pm = document.querySelector("input[name=paymentMethod]:checked").value;
-  var form = document.getElementById("orderForm");
-  if(pm === "VNPay"){
-    form.action = form.action.replace("/checkout", "/vnpay/pay");
-  }
-  form.submit();
-}
-</script>
+            function submitOrder() {
+              var form = document.getElementById("orderForm");
+              if (!form.reportValidity()) return;
+              // Luôn POST về /checkout — CheckoutServlet tự redirect VNPay nếu cần
+              form.action = "${pageContext.request.contextPath}/checkout";
+              form.method = "post";
+              form.submit();
+            }
+          </script>
       </body>
 
       </html>

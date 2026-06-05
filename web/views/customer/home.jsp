@@ -8,7 +8,7 @@
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>BếpNướng – Đặt món ngon tận nơi</title>
+          <title>GrillHouse – Đặt món ngon tận nơi</title>
           <link
             href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap"
             rel="stylesheet">
@@ -340,7 +340,7 @@
               <%-- Hero (chỉ hiện khi không tìm kiếm và không lọc danh mục) --%>
                 <c:if test="${empty keyword and (selectedCat == 0 or empty selectedCat) and not empty featured}">
                   <div class="hero">
-                    <h1>🔥 <span>BếpNướng</span><br>Thịt Nướng Chuẩn Vị</h1>
+                    <h1>🔥 <span>GrillHouse</span><br>Thịt Nướng Chuẩn Vị</h1>
                     <p>Đặt món nhanh, giao hàng tận nơi, vị ngon không cần nấu.</p>
                     <a href="#products" class="hero-btn">Xem thực đơn →</a>
                   </div>
@@ -420,16 +420,27 @@
                                   <div class="card-actions">
                                     <a href="${pageContext.request.contextPath}/product?id=${p.productID}"
                                       class="btn-detail">Chi tiết</a>
-                                    <form action="${pageContext.request.contextPath}/cart" method="post"
-                                      style="flex:1;">
-                                      <input type="hidden" name="action" value="add">
-                                      <input type="hidden" name="productID" value="${p.productID}">
-                                      <input type="hidden" name="quantity" value="1">
-                                      <button type="submit" class="btn-add-sm" <c:if test="${!p.inStock}">disabled
-                                        </c:if>>
-                                        🛒 Thêm
-                                      </button>
-                                    </form>
+                                    <c:choose>
+                                      <c:when test="${not empty sessionScope.account}">
+                                        <form action="${pageContext.request.contextPath}/cart" method="post"
+                                          style="flex:1;">
+                                          <input type="hidden" name="action" value="add">
+                                          <input type="hidden" name="productID" value="${p.productID}">
+                                          <input type="hidden" name="quantity" value="1">
+                                          <button type="submit" class="btn-add-sm" <c:if test="${!p.inStock}">disabled
+                                            </c:if>>
+                                            🛒 Thêm
+                                          </button>
+                                        </form>
+                                      </c:when>
+                                      <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/login?redirect=home"
+                                          class="btn-add-sm"
+                                          style="text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">
+                                          🔑 Đăng nhập
+                                        </a>
+                                      </c:otherwise>
+                                    </c:choose>
                                   </div>
                                 </div>
                               </c:forEach>

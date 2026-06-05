@@ -53,7 +53,7 @@ public class CheckoutServlet extends HttpServlet {
         String note           = req.getParameter("note");
         String paymentMethod  = req.getParameter("paymentMethod");
 
-        // Validate
+        // Validate trước
         if (shipAddress == null || shipAddress.trim().isEmpty() ||
             phone == null || phone.trim().isEmpty()) {
             req.setAttribute("error", "Vui lòng nhập địa chỉ giao hàng và số điện thoại.");
@@ -61,6 +61,17 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
+        // VNPay: lưu thông tin vào session rồi redirect sang VNPayServlet
+        if ("VNPay".equals(paymentMethod)) {
+            HttpSession session = req.getSession();
+            session.setAttribute("pendingShipAddress", shipAddress.trim());
+            session.setAttribute("pendingPhone",       phone.trim());
+            session.setAttribute("pendingNote",        note);
+            resp.sendRedirect(req.getContextPath() + "/vnpay/pay");
+            return;
+        }
+
+        // COD / Tiền mặt
         try {
             Order order = new Order();
             order.setAccountID(acc.getAccountID());

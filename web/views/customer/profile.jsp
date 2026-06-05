@@ -7,7 +7,7 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Thông tin cá nhân – BếpNướng</title>
+                <title>Thông tin cá nhân – GrillHouse</title>
                 <link
                     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap"
                     rel="stylesheet">

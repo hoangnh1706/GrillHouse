@@ -25,6 +25,12 @@ public class AdminProductServlet extends HttpServlet {
         try {
             req.setAttribute("categories", categoryDAO.getAll());
 
+            if ("add".equals(action)) {
+                // Không set product → form hiểu là thêm mới
+                req.getRequestDispatcher("/views/admin/product-form.jsp").forward(req, resp);
+                return;
+            }
+
             if ("edit".equals(action)) {
                 int pid = Integer.parseInt(req.getParameter("id"));
                 req.setAttribute("product", productDAO.getByID(pid));

@@ -27,6 +27,12 @@ public class CartServlet extends HttpServlet {
         String action = req.getParameter("action");
         HttpSession session = req.getSession();
 
+        // Chưa đăng nhập → không cho thêm/sửa/xóa giỏ hàng
+        if (session.getAttribute("account") == null) {
+            resp.sendRedirect(req.getContextPath() + "/login?redirect=cart");
+            return;
+        }
+
         // Lấy giỏ từ session, nếu chưa có thì tạo mới
         Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null) cart = new Cart();
