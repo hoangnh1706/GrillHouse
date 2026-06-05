@@ -329,6 +329,17 @@
               });
             }
           </script>
+          
+          <script>
+function submitOrder(){
+  var pm = document.querySelector("input[name=paymentMethod]:checked").value;
+  var form = document.getElementById("orderForm");
+  if(pm === "VNPay"){
+    form.action = form.action.replace("/checkout", "/vnpay/pay");
+  }
+  form.submit();
+}
+</script>
       </body>
 
       </html>
