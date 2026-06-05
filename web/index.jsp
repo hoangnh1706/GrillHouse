@@ -923,22 +923,6 @@
             </div>
         </section>
 
-        <div class="tech-bar">
-            <div class="tech-inner">
-                <span class="tech-label">Công nghệ</span>
-                <div class="tech-tags">
-                    <span class="tech-tag">Java Servlet</span>
-                    <span class="tech-tag">JSP / JSTL</span>
-                    <span class="tech-tag">MVC2</span>
-                    <span class="tech-tag">SQL Server</span>
-                    <span class="tech-tag">Tomcat 10</span>
-                    <span class="tech-tag">VNPay API</span>
-                    <span class="tech-tag">JDBC Transaction</span>
-                    <span class="tech-tag">SHA-256</span>
-                </div>
-            </div>
-        </div>
-
         <section class="cta-section">
             <div class="cta-glow"></div>
             <h2 class="cta-title">Sẵn sàng<br><span>đặt món?</span></h2>

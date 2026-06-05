@@ -30,7 +30,6 @@ public class VNPayServlet extends HttpServlet {
 
         // Thông tin giao hàng đã được CheckoutServlet lưu vào session
         // (pendingShipAddress, pendingPhone, pendingNote)
-
         // Số tiền (VNPay yêu cầu nhân 100, đơn vị VND)
         long amount = cart.getFinalTotal().longValue() * 100L;
 
@@ -54,18 +53,17 @@ public class VNPayServlet extends HttpServlet {
         params.put("vnp_IpAddr", getClientIp(req));
         params.put("vnp_CreateDate", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 
-        // Tạo chuỗi hash data
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
         for (Map.Entry<String, String> e : params.entrySet()) {
             String encodedKey = URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8);
             String encodedVal = URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8);
-            // hashData dùng RAW value theo đúng chuẩn VNPay
-            hashData.append(e.getKey()).append("=").append(e.getValue()).append("&");
-            // query dùng encoded value để build URL
+
+            // CẢ HƠI CHUỖI ĐỀU PHẢI DÙNG GIÁ TRỊ ĐÃ ENCODE (encodedKey và encodedVal)
+            hashData.append(encodedKey).append("=").append(encodedVal).append("&");
             query.append(encodedKey).append("=").append(encodedVal).append("&");
         }
-        // Bỏ dấu & cuối
+// Bỏ dấu & cuối
         hashData.deleteCharAt(hashData.length() - 1);
         query.deleteCharAt(query.length() - 1);
 
@@ -78,15 +76,15 @@ public class VNPayServlet extends HttpServlet {
     }
 
     // ---- helpers ----
-
     private String hmacSha512(String key, String data) {
         try {
             Mac mac = Mac.getInstance("HmacSHA512");
             mac.init(new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA512"));
             byte[] bytes = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
             StringBuilder sb = new StringBuilder();
-            for (byte b : bytes)
+            for (byte b : bytes) {
                 sb.append(String.format("%02x", b));
+            }
             return sb.toString();
         } catch (Exception e) {
             throw new RuntimeException("HMAC-SHA512 error", e);
@@ -95,8 +93,9 @@ public class VNPayServlet extends HttpServlet {
 
     private String getClientIp(HttpServletRequest req) {
         String ip = req.getHeader("X-Forwarded-For");
-        if (ip == null || ip.isEmpty())
+        if (ip == null || ip.isEmpty()) {
             ip = req.getRemoteAddr();
+        }
         return ip.contains(",") ? ip.split(",")[0].trim() : ip;
     }
 }
