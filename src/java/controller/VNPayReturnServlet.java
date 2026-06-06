@@ -45,9 +45,9 @@ public class VNPayReturnServlet extends HttpServlet {
         // Tiến hành dựng lại chuỗi hash data từ các tham số hợp lệ đã lọc
         StringBuilder hashData = new StringBuilder();
         for (Map.Entry<String, String> e : params.entrySet()) {
-            hashData.append(e.getKey())
+            hashData.append(URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8))
                     .append("=")
-                    .append(e.getValue())
+                    .append(URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8))
                     .append("&");
         }
         // Bỏ dấu & cuối cùng
