@@ -1,12 +1,20 @@
-# --- Bước 1: Dùng môi trường Java + công cụ Ant để tự biên dịch code ---
-FROM frekele/ant:1.10.3-jdk8 AS build
+# --- Bước 1: Dùng môi trường hỗ trợ Java 17 và tải Ant về để biên dịch ---
+FROM openjdk:17-jdk-slim AS build
 WORKDIR /app
+
+# Cài đặt Ant vào môi trường Java 17
+RUN apt-get update && apt-get install -y ant && rm -rf /var/lib/apt/lists/*
+
 COPY . .
-# Lệnh này sẽ tự động chạy file build.xml của NetBeans để tạo ra thư mục dist và file .war trên Cloud
+
+# Định nghĩa biến môi trường JDK_17 để đánh lừa cấu hình NetBeans Ant
+ENV platforms.JDK_17.home=/usr/local/openjdk-17
+
+# Chạy lệnh clean và build dự án
 RUN ant clean dist
 
 # --- Bước 2: Đẩy sản phẩm đã build vào máy chủ Tomcat ---
-FROM tomcat:9.0-jdk11-openjdk-slim
+FROM tomcat:9.0-jdk17-openjdk-slim
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
 # Sao chép file .war vừa tự động tạo ra từ bước 1 vào Tomcat
