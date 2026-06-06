@@ -1,15 +1,16 @@
-# Sử dụng môi trường Tomcat 10 chuẩn chạy trên Java 17
-FROM tomcat:10-jdk17-openjdk-slim
+# --- Bước 1: Dùng môi trường Java + công cụ Ant để tự biên dịch code ---
+FROM frekele/ant:1.10.3-jdk8 AS build
+WORKDIR /app
+COPY . .
+# Lệnh này sẽ tự động chạy file build.xml của NetBeans để tạo ra thư mục dist và file .war trên Cloud
+RUN ant clean dist
 
-# Xóa các file mặc định của Tomcat để tránh nặng máy
-RUN rm -rf /usr/local/tomcat/webapps/*
+# --- Bước 2: Đẩy sản phẩm đã build vào máy chủ Tomcat ---
+FROM tomcat:9.0-jdk11-openjdk-slim
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
-# Tự động copy file .war từ thư mục target (hoặc dist) vào làm trang chủ ROOT của Server
-# Mình dùng dấu * để tự động nhận diện file .war dù dự án của bạn tên là FoodStore hay GrillHouse
-COPY dist/*.war /usr/local/tomcat/webapps/ROOT.war
+# Sao chép file .war vừa tự động tạo ra từ bước 1 vào Tomcat
+COPY --from=build /app/dist/*.war /usr/local/tomcat/webapps/ROOT.war
 
-# Mở cổng 8080 cho Render kết nối
 EXPOSE 8080
-
-# Chạy server Tomcat
 CMD ["catalina.sh", "run"]
