@@ -1,20 +1,23 @@
-# --- Bước 1: Build với Eclipse Temurin JDK 17 (thay openjdk:17-jdk-slim đã bị xóa) ---
+# --- Bước 1: Build ---
 FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
 
-# Cài Ant
 RUN apt-get update && apt-get install -y ant && rm -rf /var/lib/apt/lists/*
 
 COPY . .
 
-# Định nghĩa biến môi trường JDK_17 để Ant của NetBeans nhận đúng JDK
-ENV platforms.JDK_17.home=/opt/java/openjdk
+# Ghi đè JDK path vào project.properties (override đường dẫn Windows)
+RUN echo "platforms.JDK_17.home=/opt/java/openjdk" >> nbproject/project.properties && \
+    echo "platform.active=JDK_17" >> nbproject/project.properties
 
-# Build
+# Verify
+RUN ls /opt/java/openjdk/bin/javac && echo "JDK found OK"
+
+# Build WAR
 RUN ant clean dist
 
-# --- Bước 2: Chạy trên Tomcat 9 + JDK 17 (thay tomcat:9.0-jdk17-openjdk-slim đã bị xóa) ---
-FROM tomcat:9.0-jdk17-temurin
+# --- Bước 2: Tomcat 10 + JDK 17 (Jakarta EE 10) ---
+FROM tomcat:10.1-jdk17-temurin
 
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
