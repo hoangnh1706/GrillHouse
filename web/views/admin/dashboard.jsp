@@ -230,6 +230,14 @@
               <div class="stat-value">${recentOrders.size()}</div>
               <div class="stat-note">gần đây</div>
             </div>
+            <div class="stat-card">
+              <div class="stat-icon">💰</div>
+              <div class="stat-label">Doanh thu</div>
+              <div class="stat-value" style="color:#4ade80;font-size:1.4rem;">
+                <fmt:formatNumber value="${totalRevenue}" pattern="#,###" />đ
+              </div>
+              <div class="stat-note">từ đơn hoàn thành</div>
+            </div>
           </div>
 
           <!-- Đơn hàng mới nhất -->

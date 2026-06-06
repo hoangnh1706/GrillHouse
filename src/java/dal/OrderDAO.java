@@ -19,8 +19,8 @@ public class OrderDAO extends DBContext {
             // 1. Insert Order
             // FinalAmount là computed column (TotalAmount - DiscountAmount), không INSERT trực tiếp
             String sqlOrder =
-                "INSERT INTO [Order](AccountID,TotalAmount,DiscountAmount,ShipAddress,Phone,Note,PaymentMethod) " +
-                "VALUES(?,?,?,?,?,?,?)";
+                "INSERT INTO [Order](AccountID,TotalAmount,DiscountAmount,ShipAddress,Phone,Note,PaymentMethod,IsPaid) " +
+                "VALUES(?,?,?,?,?,?,?,?)";
             int orderID;
             try (PreparedStatement ps = conn.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, order.getAccountID());
@@ -30,6 +30,7 @@ public class OrderDAO extends DBContext {
                 ps.setString(5, order.getPhone());
                 ps.setString(6, order.getNote());
                 ps.setString(7, order.getPaymentMethod());
+                ps.setBoolean(8, order.isPaid());
                 ps.executeUpdate();
                 ResultSet keys = ps.getGeneratedKeys();
                 keys.next();
@@ -115,6 +116,17 @@ public class OrderDAO extends DBContext {
             ps.setInt(1, status);
             ps.setInt(2, orderID);
             return ps.executeUpdate() > 0;
+        }
+    }
+
+    /** Tổng doanh thu từ các đơn hoàn thành (status=3) */
+    public java.math.BigDecimal getTotalRevenue() throws SQLException {
+        String sql = "SELECT ISNULL(SUM(FinalAmount),0) FROM [Order] WHERE Status=3";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getBigDecimal(1);
         }
     }
 

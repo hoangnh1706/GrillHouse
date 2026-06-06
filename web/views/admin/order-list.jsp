@@ -354,7 +354,18 @@
                                                 <td class="price">
                                                     <fmt:formatNumber value="${o.finalAmount}" pattern="#,###" />đ
                                                 </td>
-                                                <td><span class="method-badge">${o.paymentMethod}</span></td>
+                                                <td><span class="method-badge">${o.paymentMethod}</span>
+                                                    <c:if test="${o.paid}">
+                                                        <span
+                                                            style="display:block;margin-top:.3rem;font-size:.72rem;color:#4ade80;font-weight:700;">✔
+                                                            Đã thu</span>
+                                                    </c:if>
+                                                    <c:if test="${!o.paid}">
+                                                        <span
+                                                            style="display:block;margin-top:.3rem;font-size:.72rem;color:#fbbf24;font-weight:700;">⏳
+                                                            Chưa thu</span>
+                                                    </c:if>
+                                                </td>
                                                 <td><span class="status s${o.status}">${o.statusLabel}</span></td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/admin/orders"

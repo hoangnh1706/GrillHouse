@@ -1,0 +1,15 @@
+# Sử dụng môi trường Tomcat 10 chuẩn chạy trên Java 17
+FROM tomcat:10-jdk17-openjdk-slim
+
+# Xóa các file mặc định của Tomcat để tránh nặng máy
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+# Tự động copy file .war từ thư mục target (hoặc dist) vào làm trang chủ ROOT của Server
+# Mình dùng dấu * để tự động nhận diện file .war dù dự án của bạn tên là FoodStore hay GrillHouse
+COPY dist/*.war /usr/local/tomcat/webapps/ROOT.war
+
+# Mở cổng 8080 cho Render kết nối
+EXPOSE 8080
+
+# Chạy server Tomcat
+CMD ["catalina.sh", "run"]
