@@ -7,74 +7,7 @@
       <meta charset="UTF-8">
       <title>Thanh toán thất bại – GrillHouse</title>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-      <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          background: #111;
-          color: #e5e5e5;
-          font-family: 'DM Sans', sans-serif;
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .box {
-          text-align: center;
-          padding: 3rem 2rem;
-          max-width: 440px;
-        }
-
-        .icon {
-          font-size: 4rem;
-          margin-bottom: 1.5rem;
-        }
-
-        h1 {
-          font-size: 1.6rem;
-          font-weight: 700;
-          color: #f87171;
-          margin-bottom: .75rem;
-        }
-
-        p {
-          color: #888;
-          line-height: 1.6;
-          margin-bottom: 1.5rem;
-        }
-
-        .err-detail {
-          background: #3b1a1a;
-          border: 1px solid #7f1d1d;
-          color: #fca5a5;
-          border-radius: 10px;
-          padding: .9rem 1.2rem;
-          font-size: .9rem;
-          margin-bottom: 1.5rem;
-        }
-
-        .btn {
-          display: inline-block;
-          background: #f97316;
-          color: #fff;
-          text-decoration: none;
-          padding: .75rem 1.5rem;
-          border-radius: 10px;
-          font-weight: 700;
-          margin: .3rem;
-        }
-
-        .btn-sec {
-          background: transparent;
-          border: 1.5px solid #333;
-          color: #888;
-        }
-      </style>
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/payment-failed.css">
     </head>
 
     <body>

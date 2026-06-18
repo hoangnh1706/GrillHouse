@@ -23,6 +23,7 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
+        // Giỏ hàng trống thì không cho checkout
         Cart cart = (Cart) req.getSession().getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/cart");
@@ -36,24 +37,27 @@ public class CheckoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        // Kiểm tra đăng nhập
         Account acc = (Account) req.getSession().getAttribute("account");
         if (acc == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
+        // Kiểm tra giỏ hàng không rỗng
         Cart cart = (Cart) req.getSession().getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/cart");
             return;
         }
 
+        // Đọc thông tin giao hàng từ form
         String shipAddress    = req.getParameter("shipAddress");
         String phone          = req.getParameter("phone");
         String note           = req.getParameter("note");
         String paymentMethod  = req.getParameter("paymentMethod");
 
-        // Validate trước
+        // Validate địa chỉ và SĐT bắt buộc
         if (shipAddress == null || shipAddress.trim().isEmpty() ||
             phone == null || phone.trim().isEmpty()) {
             req.setAttribute("error", "Vui lòng nhập địa chỉ giao hàng và số điện thoại.");
@@ -61,7 +65,7 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        // VNPay: lưu thông tin vào session rồi redirect sang VNPayServlet
+        // VNPay: lưu thông tin giao hàng vào session rồi redirect sang VNPayServlet
         if ("VNPay".equals(paymentMethod)) {
             HttpSession session = req.getSession();
             session.setAttribute("pendingShipAddress", shipAddress.trim());
@@ -71,7 +75,7 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        // COD / Tiền mặt
+        // COD / Tiền mặt: tạo đơn hàng trực tiếp
         try {
             Order order = new Order();
             order.setAccountID(acc.getAccountID());

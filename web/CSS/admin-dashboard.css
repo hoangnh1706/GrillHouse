@@ -1,0 +1,178 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0f0f0f;
+  color: #e5e5e5;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background: #161616;
+  border-right: 1px solid #222;
+  padding: 1.5rem 1rem;
+  position: fixed;
+}
+
+.sidebar .logo {
+  color: #f97316;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  padding-left: .5rem;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  color: #888;
+  text-decoration: none;
+  padding: .6rem .75rem;
+  border-radius: 8px;
+  font-size: .9rem;
+  margin-bottom: .2rem;
+  transition: all .2s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #f97316;
+  color: #fff;
+}
+
+.main {
+  margin-left: 220px;
+  flex: 1;
+  padding: 2rem;
+}
+
+.welcome {
+  margin-bottom: 2rem;
+}
+
+.welcome h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f0f0f0;
+}
+
+.welcome p {
+  color: #666;
+  margin-top: .3rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #1a1a1a;
+  border: 1px solid #252525;
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.stat-icon {
+  font-size: 2rem;
+}
+
+.stat-label {
+  color: #777;
+  font-size: .85rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #f97316;
+}
+
+.stat-note {
+  font-size: .78rem;
+  color: #555;
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f0f0f0;
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th {
+  background: #222;
+  color: #888;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: .65rem 1rem;
+  text-align: left;
+}
+
+td {
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #1f1f1f;
+  font-size: .88rem;
+}
+
+tr:last-child td {
+  border: none;
+}
+
+.price {
+  color: #f97316;
+  font-weight: 700;
+}
+
+.status {
+  padding: .22rem .6rem;
+  border-radius: 12px;
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+.s0 {
+  background: #292300;
+  color: #fbbf24;
+}
+
+.s1 {
+  background: #1a2e1a;
+  color: #4ade80;
+}
+
+.s2 {
+  background: #1a2040;
+  color: #60a5fa;
+}
+
+.s3 {
+  background: #14532d;
+  color: #86efac;
+}
+
+.s4 {
+  background: #3b1a1a;
+  color: #f87171;
+}

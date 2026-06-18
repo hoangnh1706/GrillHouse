@@ -2,14 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/FoodStore/src/java/util/VNPayConfig.java</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/FoodStore/src/java/controller/VNPayServlet.java</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/FoodStore/web/views/customer/payment-failed.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/FoodStore/web/views/customer/checkout.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/FoodStore/src/java/controller/VNPayReturnServlet.java</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/FoodStore/web/WEB-INF/web.xml</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/FoodStore/web/views/customer/order-history.jsp</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

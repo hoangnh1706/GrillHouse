@@ -23,6 +23,7 @@ public class AdminProductServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         try {
+            // Luôn load danh mục để dùng trong dropdown form
             req.setAttribute("categories", categoryDAO.getAll());
 
             if ("add".equals(action)) {
@@ -32,6 +33,7 @@ public class AdminProductServlet extends HttpServlet {
             }
 
             if ("edit".equals(action)) {
+                // Load sản phẩm theo id và forward sang form chỉnh sửa
                 int pid = Integer.parseInt(req.getParameter("id"));
                 req.setAttribute("product", productDAO.getByID(pid));
                 req.getRequestDispatcher("/views/admin/product-form.jsp").forward(req, resp);
@@ -39,13 +41,14 @@ public class AdminProductServlet extends HttpServlet {
             }
 
             if ("delete".equals(action)) {
+                // Xóa sản phẩm theo id rồi redirect về danh sách
                 int pid = Integer.parseInt(req.getParameter("id"));
                 productDAO.delete(pid);
                 resp.sendRedirect(req.getContextPath() + "/admin/products?msg=deleted");
                 return;
             }
 
-            // Mặc định: danh sách
+            // Mặc định: hiển thị toàn bộ danh sách sản phẩm (bao gồm cả đã ẩn)
             req.setAttribute("products", productDAO.getAll_Admin());
             req.getRequestDispatcher("/views/admin/product-list.jsp").forward(req, resp);
 
@@ -55,15 +58,17 @@ public class AdminProductServlet extends HttpServlet {
         }
     }
 
-    /** POST: lưu thêm mới hoặc cập nhật */
+    /** POST: lưu thêm mới hoặc cập nhật sản phẩm */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        // Xác định là thêm mới hay chỉnh sửa dựa vào sự hiện diện của productID
         String idParam = req.getParameter("productID");
         boolean isEdit = (idParam != null && !idParam.isEmpty());
 
         try {
+            // Đọc toàn bộ thông tin sản phẩm từ form và gán vào object Product
             Product p = new Product();
             if (isEdit) p.setProductID(Integer.parseInt(idParam));
             p.setCategoryID(Integer.parseInt(req.getParameter("categoryID")));
@@ -75,10 +80,12 @@ public class AdminProductServlet extends HttpServlet {
             p.setFeatured("on".equals(req.getParameter("isFeatured")));
             p.setActive(true);
 
+            // Giá khuyến mãi có thể bỏ trống → set null nếu không có
             String salePriceStr = req.getParameter("salePrice");
             p.setSalePrice((salePriceStr != null && !salePriceStr.isEmpty())
                 ? new BigDecimal(salePriceStr) : null);
 
+            // Cập nhật hoặc thêm mới tùy theo action
             if (isEdit) productDAO.update(p);
             else        productDAO.insert(p);
 

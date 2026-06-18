@@ -16,19 +16,21 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        // Hiển thị trang đăng ký
         req.getRequestDispatcher("/views/customer/register.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        // Đọc dữ liệu từ form đăng ký
         String fullName  = req.getParameter("fullName");
         String email     = req.getParameter("email");
         String phone     = req.getParameter("phone");
         String password  = req.getParameter("password");
         String confirm   = req.getParameter("confirmPassword");
 
-        // Validate
+        // Validate các trường bắt buộc không được để trống
         if (fullName == null || fullName.trim().isEmpty() ||
             email == null || email.trim().isEmpty() ||
             password == null || password.trim().isEmpty()) {
@@ -37,12 +39,14 @@ public class RegisterServlet extends HttpServlet {
             req.getRequestDispatcher("/views/customer/register.jsp").forward(req, resp);
             return;
         }
+        // Mật khẩu xác nhận phải khớp
         if (!password.equals(confirm)) {
             req.setAttribute("error", "Mật khẩu xác nhận không khớp.");
             keepFormData(req, fullName, email, phone);
             req.getRequestDispatcher("/views/customer/register.jsp").forward(req, resp);
             return;
         }
+        // Mật khẩu tối thiểu 6 ký tự
         if (password.length() < 6) {
             req.setAttribute("error", "Mật khẩu phải có ít nhất 6 ký tự.");
             keepFormData(req, fullName, email, phone);
@@ -51,6 +55,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         try {
+            // Tạo object Account và hash mật khẩu trước khi lưu
             Account acc = new Account();
             acc.setFullName(fullName.trim());
             acc.setEmail(email.trim().toLowerCase());
@@ -59,8 +64,10 @@ public class RegisterServlet extends HttpServlet {
 
             boolean success = accountDAO.register(acc);
             if (success) {
+                // Đăng ký thành công → chuyển sang trang login với thông báo
                 resp.sendRedirect(req.getContextPath() + "/login?msg=registered");
             } else {
+                // Email đã tồn tại trong hệ thống
                 req.setAttribute("error", "Email này đã được đăng ký. Vui lòng dùng email khác.");
                 keepFormData(req, fullName, email, phone);
                 req.getRequestDispatcher("/views/customer/register.jsp").forward(req, resp);
@@ -72,6 +79,7 @@ public class RegisterServlet extends HttpServlet {
         }
     }
 
+    // Giữ lại dữ liệu form để người dùng không phải nhập lại khi có lỗi
     private void keepFormData(HttpServletRequest req, String name, String email, String phone) {
         req.setAttribute("fullName", name);
         req.setAttribute("email", email);

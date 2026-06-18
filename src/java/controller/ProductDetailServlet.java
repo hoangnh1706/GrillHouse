@@ -19,6 +19,7 @@ public class ProductDetailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        // Bắt buộc phải có tham số id, không có thì về trang chủ
         String idParam = req.getParameter("id");
         if (idParam == null) {
             resp.sendRedirect(req.getContextPath() + "/home");
@@ -27,6 +28,8 @@ public class ProductDetailServlet extends HttpServlet {
 
         try {
             int pid = Integer.parseInt(idParam);
+
+            // Kiểm tra sản phẩm tồn tại trong DB
             Product p = productDAO.getByID(pid);
             if (p == null) {
                 resp.sendRedirect(req.getContextPath() + "/home");
@@ -35,9 +38,11 @@ public class ProductDetailServlet extends HttpServlet {
 
             req.setAttribute("product", p);
 
-            // Load reviews — nếu bảng Review chưa tạo thì set list rỗng, không crash
+            // Load đánh giá — nếu bảng Review chưa tạo thì set list rỗng, không crash
             try {
                 req.setAttribute("reviews", reviewDAO.getByProduct(pid));
+
+                // Kiểm tra người dùng có quyền đánh giá không (đã mua & chưa review)
                 Account acc = (Account) req.getSession().getAttribute("account");
                 if (acc != null) {
                     req.setAttribute("canReview",
@@ -45,6 +50,7 @@ public class ProductDetailServlet extends HttpServlet {
                         !reviewDAO.hasReviewed(acc.getAccountID(), pid));
                 }
             } catch (Exception reviewEx) {
+                // Bảng review chưa tồn tại hoặc lỗi → trả về danh sách rỗng
                 req.setAttribute("reviews", new java.util.ArrayList<>());
             }
 

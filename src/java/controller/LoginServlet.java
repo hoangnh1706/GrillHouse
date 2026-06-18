@@ -41,22 +41,25 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
+            // Hash mật khẩu và tra cứu tài khoản trong DB
             String hashedPw = PasswordUtil.hash(password);
             Account acc = accountDAO.login(email.trim(), hashedPw);
 
             if (acc != null) {
+                // Đăng nhập thành công: lưu account vào session, hết hạn sau 1 giờ
                 HttpSession session = req.getSession();
                 session.setAttribute("account", acc);
                 session.setMaxInactiveInterval(60 * 60); // 1 giờ
 
-                // Admin → trang quản trị, user → trang chủ
+                // Admin → trang quản trị, user thường → trang chủ
                 String redirect = acc.isAdmin()
                     ? req.getContextPath() + "/admin/home"
                     : req.getContextPath() + "/home";
                 resp.sendRedirect(redirect);
             } else {
+                // Sai thông tin đăng nhập: hiển thị lỗi và giữ lại email đã nhập
                 req.setAttribute("error", "Email hoặc mật khẩu không đúng.");
-                req.setAttribute("email", email); // giữ lại email đã nhập
+                req.setAttribute("email", email);
                 req.getRequestDispatcher("/views/customer/login.jsp").forward(req, resp);
             }
         } catch (Exception e) {

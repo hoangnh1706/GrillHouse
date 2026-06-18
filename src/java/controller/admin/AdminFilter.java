@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
+// Filter bảo vệ toàn bộ URL /admin/*, chỉ cho admin đã đăng nhập đi qua
 @WebFilter("/admin/*")
 public class AdminFilter implements Filter {
 
@@ -16,6 +17,7 @@ public class AdminFilter implements Filter {
         HttpServletRequest  request  = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        // Lấy thông tin tài khoản từ session
         Account acc = (Account) request.getSession().getAttribute("account");
 
         if (acc == null) {
@@ -24,11 +26,12 @@ public class AdminFilter implements Filter {
             return;
         }
         if (!acc.isAdmin()) {
-            // Đăng nhập rồi nhưng không phải admin → về trang chủ
+            // Đã đăng nhập nhưng không phải admin → về trang chủ
             response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
-        chain.doFilter(req, res); // OK, cho qua
+        // Tài khoản hợp lệ, cho request đi tiếp
+        chain.doFilter(req, res);
     }
 }

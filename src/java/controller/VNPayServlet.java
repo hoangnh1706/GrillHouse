@@ -21,8 +21,9 @@ public class VNPayServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = req.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
 
+        // Kiểm tra giỏ hàng, nếu rỗng thì về trang cart
+        Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/cart");
             return;
@@ -30,15 +31,16 @@ public class VNPayServlet extends HttpServlet {
 
         // Thông tin giao hàng đã được CheckoutServlet lưu vào session
         // (pendingShipAddress, pendingPhone, pendingNote)
-        // Số tiền (VNPay yêu cầu nhân 100, đơn vị VND)
+
+        // Tính số tiền thanh toán (VNPay yêu cầu nhân 100, đơn vị VND)
         long amount = cart.getFinalTotal().longValue() * 100L;
 
-        // Tạo mã đơn hàng tạm (txnRef) — dùng timestamp
+        // Tạo mã giao dịch tạm dùng timestamp + 6 ký tự đầu session ID
         String txnRef = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
                 + "_" + session.getId().substring(0, 6);
         session.setAttribute("pendingTxnRef", txnRef);
 
-        // Build tham số VNPay (phải sort theo alphabet)
+        // Build tham số VNPay, dùng TreeMap để tự động sort theo alphabet
         Map<String, String> params = new TreeMap<>();
         params.put("vnp_Version", VNPayConfig.API_VERSION);
         params.put("vnp_Command", VNPayConfig.COMMAND);
@@ -53,29 +55,28 @@ public class VNPayServlet extends HttpServlet {
         params.put("vnp_IpAddr", getClientIp(req));
         params.put("vnp_CreateDate", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 
+        // Xây dựng chuỗi hashData và query string (cả key lẫn value đều URL-encode)
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
         for (Map.Entry<String, String> e : params.entrySet()) {
             String encodedKey = URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8);
             String encodedVal = URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8);
-
-            // CẢ HƠI CHUỖI ĐỀU PHẢI DÙNG GIÁ TRỊ ĐÃ ENCODE (encodedKey và encodedVal)
             hashData.append(encodedKey).append("=").append(encodedVal).append("&");
             query.append(encodedKey).append("=").append(encodedVal).append("&");
         }
-// Bỏ dấu & cuối
+        // Bỏ dấu & cuối
         hashData.deleteCharAt(hashData.length() - 1);
         query.deleteCharAt(query.length() - 1);
 
-        // Ký HMAC-SHA512
+        // Ký HMAC-SHA512 và gắn chữ ký vào query string
         String secureHash = hmacSha512(VNPayConfig.HASH_SECRET, hashData.toString());
         query.append("&vnp_SecureHash=").append(secureHash);
 
-        // Redirect sang VNPay
+        // Redirect người dùng sang cổng thanh toán VNPay
         resp.sendRedirect(VNPayConfig.PAY_URL + "?" + query);
     }
 
-    // ---- helpers ----
+    // Tính chữ ký HMAC-SHA512 cho chuỗi dữ liệu với khóa bí mật
     private String hmacSha512(String key, String data) {
         try {
             Mac mac = Mac.getInstance("HmacSHA512");
@@ -91,6 +92,7 @@ public class VNPayServlet extends HttpServlet {
         }
     }
 
+    // Lấy IP thực của client, ưu tiên header X-Forwarded-For khi đứng sau proxy
     private String getClientIp(HttpServletRequest req) {
         String ip = req.getHeader("X-Forwarded-For");
         if (ip == null || ip.isEmpty()) {
