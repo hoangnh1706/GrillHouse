@@ -10,7 +10,7 @@
         <link
           href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
           rel="stylesheet">
-          <link rel="stylesheet" href="${pageContext.request.contextPath}/css/product-detail.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/product-detail.css">
       </head>
 
       <body>

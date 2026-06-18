@@ -299,3 +299,9 @@ body {
 .search-info strong {
     color: #f97316;
 }
+
+/* Sort bar */
+.sort-bar { display: flex; align-items: center; gap: .6rem; margin-bottom: 1.5rem; }
+.sort-label { font-size: .85rem; color: #777; white-space: nowrap; }
+.sort-select { background: #1c1c1c; border: 1.5px solid #333; color: #eee; border-radius: 8px; padding: .4rem .9rem; font-size: .85rem; font-family: inherit; cursor: pointer; outline: none; transition: border .2s; }
+.sort-select:focus { border-color: #f97316; }

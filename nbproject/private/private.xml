@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/home.jsp</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/order-list.jsp</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/order-history.css</file>
@@ -24,6 +25,19 @@
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/order-history.jsp</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/index.css</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/payment-failed.jsp</file>
+=======
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/combo4nguoi.png</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/bo_la_lot.jpg</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/VNPayReturnServlet.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/bia-heineken-.jpg</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/Tra-Da.jpg</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/combo2nguoi.png</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/model/Account.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/GeminiServlet.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/checkout.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/common/header.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/VNPayServlet.java</file>
+>>>>>>> 8a15530ae61aa816d7ae456c237c0f2cec730dec
         </group>
     </open-files>
 </project-private>

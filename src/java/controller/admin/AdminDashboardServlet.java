@@ -21,6 +21,7 @@ public class AdminDashboardServlet extends HttpServlet {
             req.setAttribute("totalProducts", productDAO.getAll_Admin().size());
             req.setAttribute("recentOrders",  orderDAO.getAll(-1));
             req.setAttribute("pendingOrders", orderDAO.getAll(0).size());
+            req.setAttribute("totalRevenue",  orderDAO.getTotalRevenue());
         } catch (Exception e) {
             e.printStackTrace();
         }
