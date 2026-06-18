@@ -2,6 +2,28 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/home.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/order-list.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/order-history.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/profile.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/checkout.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/dashboard.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/cart.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/product-form.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/product-detail.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/index.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/register.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/register.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/login.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/product-detail.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/profile.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/login.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/common/header.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/product-list.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/order-history.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/index.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/payment-failed.jsp</file>
+        </group>
     </open-files>
 </project-private>
