@@ -12,12 +12,15 @@
      z-index: 999;
      box-shadow: 0 2px 12px rgba(0,0,0,.4);
      ">
-    <!-- Logo -->
-    <a href="${pageContext.request.contextPath}/home" style="
-       color:#f97316; font-size:1.4rem; font-weight:800;
-       text-decoration:none;
-       font-family: 'Playfair Display', serif;
-       ">🔥GrillHouse</a>
+   <!-- Logo -->
+<a href="${pageContext.request.contextPath}/home" style="
+   font-size:1.4rem;
+   font-weight:800;
+   text-decoration:none;
+   font-family:'Playfair Display', serif;
+">
+    🔥<span style="color:#f97316;">Grill</span><span style="color:white;">House</span>
+</a>
 
     <!-- Search -->
     <form action="${pageContext.request.contextPath}/search" method="get" style="display:flex;gap:.5rem;">
@@ -100,4 +103,5 @@
         </c:choose>
     </div>
 </nav>
+        
 <%@ include file="/views/common/chatbot.jsp" %>

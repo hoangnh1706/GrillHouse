@@ -144,3 +144,9 @@ h1 {
     color: #aaa;
     margin-left: .5rem;
 }
+
+/* Filter tabs */
+.filter-bar { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.filter-btn { padding: .4rem 1rem; border-radius: 20px; text-decoration: none; font-size: .85rem; font-weight: 600; border: 1.5px solid #333; color: #aaa; transition: all .2s; white-space: nowrap; }
+.filter-btn:hover { border-color: #f97316; color: #f97316; }
+.filter-btn.active { background: #f97316; border-color: #f97316; color: #fff; }

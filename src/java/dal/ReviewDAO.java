@@ -1,8 +1,8 @@
 package dal;
 
-import model.Review;
 import java.sql.*;
 import java.util.*;
+import model.Review;
 
 public class ReviewDAO extends DBContext {
 
@@ -12,7 +12,7 @@ public class ReviewDAO extends DBContext {
         String sql =
             "SELECT r.*, a.FullName AS ReviewerName " +
             "FROM Review r JOIN Account a ON r.AccountID = a.AccountID " +
-            "WHERE r.ProductID = ? ORDER BY r.CreatedAt DESC";
+            "WHERE r.ProductID = ? ORDER BY r.ReviewDate DESC";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, productID);
@@ -25,14 +25,53 @@ public class ReviewDAO extends DBContext {
                 rv.setReviewerName(rs.getString("ReviewerName"));
                 rv.setRating(rs.getInt("Rating"));
                 rv.setComment(rs.getString("Comment"));
-                rv.setCreatedAt(rs.getTimestamp("CreatedAt"));
+                rv.setCreatedAt(rs.getTimestamp("ReviewDate"));
                 list.add(rv);
             }
         }
         return list;
     }
 
-    /** Kiểm tra khách đã mua sản phẩm này chưa (order status = 3) */
+    /** Lấy review của 1 user với 1 sản phẩm (để hiện lại khi sửa) */
+    public Review getByAccountAndProduct(int accountID, int productID) throws SQLException {
+        String sql =
+            "SELECT r.*, a.FullName AS ReviewerName " +
+            "FROM Review r JOIN Account a ON r.AccountID = a.AccountID " +
+            "WHERE r.AccountID = ? AND r.ProductID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, accountID);
+            ps.setInt(2, productID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Review rv = new Review();
+                rv.setReviewID(rs.getInt("ReviewID"));
+                rv.setProductID(rs.getInt("ProductID"));
+                rv.setAccountID(rs.getInt("AccountID"));
+                rv.setReviewerName(rs.getString("ReviewerName"));
+                rv.setRating(rs.getInt("Rating"));
+                rv.setComment(rs.getString("Comment"));
+                rv.setCreatedAt(rs.getTimestamp("ReviewDate"));
+                return rv;
+            }
+        }
+        return null;
+    }
+
+    /** Cập nhật đánh giá đã có */
+    public boolean update(Review rv) throws SQLException {
+        String sql = "UPDATE Review SET Rating=?, Comment=? WHERE AccountID=? AND ProductID=?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, rv.getRating());
+            ps.setString(2, rv.getComment());
+            ps.setInt(3, rv.getAccountID());
+            ps.setInt(4, rv.getProductID());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    /** Kiểm tra khách đã mua và nhận hàng thành công (status=3) */
     public boolean hasPurchased(int accountID, int productID) throws SQLException {
         String sql =
             "SELECT COUNT(*) FROM OrderDetail od " +

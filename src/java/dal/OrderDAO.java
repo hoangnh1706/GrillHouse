@@ -130,9 +130,137 @@ public class OrderDAO extends DBContext {
         }
     }
 
+    /** Admin: count đơn theo từng status (0..4) */
+    public Map<Integer, Integer> getCountByStatus() throws SQLException {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int s = 0; s <= 4; s++) map.put(s, 0);
+
+        String sql = "SELECT Status, COUNT(*) AS Cnt FROM [Order] GROUP BY Status";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int status = rs.getInt("Status");
+                int cnt = rs.getInt("Cnt");
+                if (map.containsKey(status)) map.put(status, cnt);
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Doanh thu theo ngày trong 7 ngày gần nhất (theo OrderDate), chỉ tính status=3
+     * Kết quả trả về list size 7 (có thể là 0 nếu không có dữ liệu).
+     */
+    public List<Object[]> getRevenueLast7Days() throws SQLException {
+        List<Object[]> result = new ArrayList<>();
+
+        String sql =
+            "WITH D AS (\n" +
+            "  SELECT TOP 7 CAST(DATEADD(day, -ROW_NUMBER() OVER(ORDER BY (SELECT NULL)), GETDATE()) AS date) AS DayKey\n" +
+            "  FROM sys.objects\n" +
+            ")\n" +
+            "SELECT d.DayKey AS DayDate,\n" +
+            "       ISNULL(SUM(o.FinalAmount),0) AS Revenue\n" +
+            "FROM D d\n" +
+            "LEFT JOIN [Order] o ON CAST(o.OrderDate AS date) = d.DayKey AND o.Status=3\n" +
+            "GROUP BY d.DayKey\n" +
+            "ORDER BY d.DayKey";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                result.add(new Object[]{rs.getDate("DayDate"), rs.getBigDecimal("Revenue")});
+            }
+        }
+        return result;
+    }
+
+    /** Top sản phẩm bán chạy (dựa theo tổng quantity), trong đó lấy theo đơn hoàn thành status=3 */
+    public List<Object[]> getTopProducts(int limit) throws SQLException {
+        List<Object[]> list = new ArrayList<>();
+
+        String sql =
+            "SELECT TOP (?) "+
+            "   od.ProductID,\n" +
+            "   p.ProductName,\n" +
+            "   SUM(od.Quantity) AS TotalQty,\n" +
+            "   SUM(od.Subtotal) AS TotalRevenue\n" +
+            "FROM OrderDetail od\n" +
+            "JOIN [Order] o ON od.OrderID = o.OrderID\n" +
+            "JOIN Product p ON od.ProductID = p.ProductID\n" +
+            "WHERE o.Status = 3\n" +
+            "GROUP BY od.ProductID, p.ProductName\n" +
+            "ORDER BY TotalQty DESC";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int productID = rs.getInt("ProductID");
+                    String name = rs.getString("ProductName");
+                    int totalQty = rs.getInt("TotalQty");
+                    java.math.BigDecimal totalRevenue = rs.getBigDecimal("TotalRevenue");
+                    list.add(new Object[]{productID, name, totalQty, totalRevenue});
+                }
+            }
+        }
+
+        return list;
+    }
+
     // ---- helper ----
 
+    /**
+     * Thống kê doanh thu theo tháng (status=3), lấy monthsBack tháng gần nhất.
+     * Trả về list: [Year, Month, Revenue]
+     */
+    public List<Object[]> getRevenueByMonth(int monthsBack) throws SQLException {
+        List<Object[]> list = new ArrayList<>();
+
+        String sql =
+            "WITH M AS (\n" +
+            "  SELECT TOP (?)\n" +
+            "    DATEADD(month, -ROW_NUMBER() OVER(ORDER BY (SELECT NULL)), GETDATE()) AS MonthStart\n" +
+            "  FROM sys.objects\n" +
+            ")\n" +
+            "SELECT\n" +
+            "  YEAR(m.MonthStart) AS [Year],\n" +
+            "  MONTH(m.MonthStart) AS [Month],\n" +
+            "  ISNULL(SUM(o.FinalAmount),0) AS Revenue\n" +
+            "FROM M m\n" +
+            "LEFT JOIN [Order] o\n" +
+            "  ON o.Status = 3\n" +
+            "  AND o.OrderDate >= m.MonthStart\n" +
+            "  AND o.OrderDate < DATEADD(month, 1, m.MonthStart)\n" +
+            "GROUP BY YEAR(m.MonthStart), MONTH(m.MonthStart)\n" +
+            "ORDER BY [Year], [Month]";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, monthsBack);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int year = rs.getInt("Year");
+                    int month = rs.getInt("Month");
+                    java.math.BigDecimal revenue = rs.getBigDecimal("Revenue");
+                    list.add(new Object[]{year, month, revenue});
+                }
+            }
+        }
+
+        return list;
+    }
+
+    /** Xu hướng doanh thu 12 tháng gần nhất (wrapper) */
+    public List<Object[]> getRevenueTrend12Months() throws SQLException {
+        return getRevenueByMonth(12);
+    }
+
     private List<OrderDetail> getDetails(int orderID) throws SQLException {
+
         List<OrderDetail> list = new ArrayList<>();
         String sql =
             "SELECT od.*, p.ProductName, p.ImageURL " +

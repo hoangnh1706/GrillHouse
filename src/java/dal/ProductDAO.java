@@ -1,9 +1,8 @@
 package dal;
 
-import model.Product;
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
+import model.Product;
 
 public class ProductDAO extends DBContext {
 
@@ -86,6 +85,84 @@ public class ProductDAO extends DBContext {
             "WHERE p.IsActive=1 AND p.IsFeatured=1 " +
             "ORDER BY p.CreatedAt DESC";
         return queryWithParams(sql, limit);
+    }
+
+    // ===================== FILTER TỔNG HỢP =====================
+
+    /**
+     * Lọc sản phẩm theo nhiều tiêu chí: danh mục, giá, đánh giá, sort, featured, sale
+     * Tất cả tham số đều optional (null/0 = bỏ qua)
+     */
+    public List<Product> filter(int categoryID, int priceRange, double minRating,
+                                String sort, boolean onlyFeatured, boolean onlySale)
+            throws SQLException {
+
+        StringBuilder sql = new StringBuilder(
+            "SELECT p.*, c.CategoryName, " +
+            "       ISNULL(AVG(CAST(r.Rating AS FLOAT)),0) AS AvgRating, " +
+            "       COUNT(r.ReviewID) AS ReviewCount " +
+            "FROM Product p " +
+            "JOIN Category c ON p.CategoryID = c.CategoryID " +
+            "LEFT JOIN Review r ON p.ProductID = r.ProductID " +
+            "WHERE p.IsActive=1 AND c.IsActive=1 "
+        );
+
+        List<Object> params = new ArrayList<>();
+
+        // Lọc danh mục
+        if (categoryID > 0) {
+            sql.append("AND p.CategoryID=? ");
+            params.add(categoryID);
+        }
+
+        // Lọc theo mức giá
+        if (priceRange == 1) {
+            sql.append("AND ISNULL(p.SalePrice, p.Price) < 100000 ");
+        } else if (priceRange == 2) {
+            sql.append("AND ISNULL(p.SalePrice, p.Price) BETWEEN 100000 AND 200000 ");
+        } else if (priceRange == 3) {
+            sql.append("AND ISNULL(p.SalePrice, p.Price) BETWEEN 200000 AND 300000 ");
+        } else if (priceRange == 4) {
+            sql.append("AND ISNULL(p.SalePrice, p.Price) > 300000 ");
+        }
+
+        // Chỉ món nổi bật
+        if (onlyFeatured) {
+            sql.append("AND p.IsFeatured=1 ");
+        }
+
+        // Chỉ món đang sale
+        if (onlySale) {
+            sql.append("AND p.SalePrice IS NOT NULL ");
+        }
+
+        // GROUP BY bắt buộc khi dùng AVG/COUNT
+        sql.append(
+            "GROUP BY p.ProductID,p.CategoryID,p.ProductName,p.Description," +
+            "         p.Price,p.SalePrice,p.ImageURL,p.Stock,p.IsFeatured," +
+            "         p.IsActive,p.CreatedAt,c.CategoryName "
+        );
+
+        // Lọc rating sau HAVING
+        if (minRating > 0) {
+            sql.append("HAVING ISNULL(AVG(CAST(r.Rating AS FLOAT)),0) >= ? ");
+            params.add(minRating);
+        }
+
+        // Sắp xếp
+        if ("priceAsc".equals(sort)) {
+            sql.append("ORDER BY ISNULL(p.SalePrice, p.Price) ASC");
+        } else if ("priceDesc".equals(sort)) {
+            sql.append("ORDER BY ISNULL(p.SalePrice, p.Price) DESC");
+        } else if ("rating".equals(sort)) {
+            sql.append("ORDER BY AvgRating DESC, p.IsFeatured DESC");
+        } else if ("newest".equals(sort)) {
+            sql.append("ORDER BY p.CreatedAt DESC");
+        } else {
+            sql.append("ORDER BY p.IsFeatured DESC, p.CreatedAt DESC");
+        }
+
+        return queryWithParams(sql.toString(), params.toArray());
     }
 
     // ===================== ADMIN - CRUD =====================

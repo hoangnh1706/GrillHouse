@@ -38,19 +38,28 @@ public class ProductDetailServlet extends HttpServlet {
 
             req.setAttribute("product", p);
 
-            // Load đánh giá — nếu bảng Review chưa tạo thì set list rỗng, không crash
+            // Kiểm tra quyền đánh giá trước (query OrderDetail/Order — luôn tồn tại)
+            Account acc = (Account) req.getSession().getAttribute("account");
+            if (acc != null) {
+                try {
+                    boolean hasPurchased = reviewDAO.hasPurchased(acc.getAccountID(), pid);
+                    boolean hasReviewed  = reviewDAO.hasReviewed(acc.getAccountID(), pid);
+                    req.setAttribute("canReview",    hasPurchased);  // đã mua → có thể review hoặc sửa
+                    req.setAttribute("hasPurchased", hasPurchased);
+                    req.setAttribute("hasReviewed",  hasReviewed);
+                    // Nếu đã review rồi → load review cũ để điền sẵn vào form sửa
+                    if (hasReviewed) {
+                        req.setAttribute("myReview", reviewDAO.getByAccountAndProduct(acc.getAccountID(), pid));
+                    }
+                } catch (Exception ex) {
+                    req.setAttribute("canReview", false);
+                }
+            }
+
+            // Load danh sách đánh giá (bảng Review có thể chưa tồn tại)
             try {
                 req.setAttribute("reviews", reviewDAO.getByProduct(pid));
-
-                // Kiểm tra người dùng có quyền đánh giá không (đã mua & chưa review)
-                Account acc = (Account) req.getSession().getAttribute("account");
-                if (acc != null) {
-                    req.setAttribute("canReview",
-                        reviewDAO.hasPurchased(acc.getAccountID(), pid) &&
-                        !reviewDAO.hasReviewed(acc.getAccountID(), pid));
-                }
             } catch (Exception reviewEx) {
-                // Bảng review chưa tồn tại hoặc lỗi → trả về danh sách rỗng
                 req.setAttribute("reviews", new java.util.ArrayList<>());
             }
 

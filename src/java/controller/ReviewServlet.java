@@ -45,18 +45,18 @@ public class ReviewServlet extends HttpServlet {
                 return;
             }
 
-            // Kiểm tra đã đánh giá chưa
-            if (reviewDAO.hasReviewed(acc.getAccountID(), productID)) {
-                resp.sendRedirect(req.getContextPath() + "/product?id=" + productID + "&reviewError=alreadyReviewed");
-                return;
-            }
-
             Review rv = new Review();
             rv.setProductID(productID);
             rv.setAccountID(acc.getAccountID());
             rv.setRating(rating);
             rv.setComment(comment != null ? comment.trim() : "");
-            reviewDAO.insert(rv);
+
+            // Đã review rồi → UPDATE, chưa review → INSERT
+            if (reviewDAO.hasReviewed(acc.getAccountID(), productID)) {
+                reviewDAO.update(rv);
+            } else {
+                reviewDAO.insert(rv);
+            }
 
             resp.sendRedirect(req.getContextPath() + "/product?id=" + productID + "&reviewSuccess=1");
 

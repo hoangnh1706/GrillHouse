@@ -8,7 +8,7 @@ public class VNPayConfig {
     // =========================================================
 
     public static final String PAY_URL    = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static final String RETURN_URL = "https://grillhouse-p9j2.onrender.com/vnpay/return";    public static final String API_VERSION= "2.1.0";
+    public static final String RETURN_URL = "http://localhost:8888/GrillHouse/vnpay/return";    public static final String API_VERSION= "2.1.0";
     public static final String COMMAND    = "pay";
     public static final String CURR_CODE  = "VND";
     public static final String LOCALE     = "vn";

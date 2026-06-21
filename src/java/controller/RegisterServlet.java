@@ -1,7 +1,7 @@
 package controller;
 
 import dal.AccountDAO;
-import dal.PasswordUtil;
+import util.PasswordUtil;
 import model.Account;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;

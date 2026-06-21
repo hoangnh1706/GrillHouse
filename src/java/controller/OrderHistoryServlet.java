@@ -24,8 +24,24 @@ public class OrderHistoryServlet extends HttpServlet {
         }
 
         try {
-            // Lấy danh sách đơn hàng của tài khoản hiện tại
-            req.setAttribute("orders", orderDAO.getByAccount(acc.getAccountID()));
+            // Lấy danh sách đơn hàng của tài khoản, filter theo status nếu có
+            String statusParam = req.getParameter("status");
+            java.util.List<model.Order> orders;
+            if (statusParam != null && !statusParam.isEmpty()) {
+                // Lọc theo status: lấy tất cả rồi filter
+                orders = new java.util.ArrayList<>();
+                for (model.Order o : orderDAO.getByAccount(acc.getAccountID())) {
+                    if (o.getStatus() == Integer.parseInt(statusParam)) orders.add(o);
+                }
+            } else {
+                orders = orderDAO.getByAccount(acc.getAccountID());
+            }
+            // Load thêm details (danh sách món) cho từng đơn để hiện nút Feedback
+            for (model.Order o : orders) {
+                model.Order full = orderDAO.getByID(o.getOrderID());
+                if (full != null) o.setDetails(full.getDetails());
+            }
+            req.setAttribute("orders", orders);
 
             // Nếu vừa đặt hàng xong, hiển thị thông báo thành công kèm mã đơn
             String successID = req.getParameter("success");
