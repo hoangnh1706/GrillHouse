@@ -17,23 +17,38 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Đọc tham số lọc theo danh mục (nếu có)
-        String catParam = req.getParameter("category");
+        // Đọc tất cả tham số filter từ request
+        String catParam     = req.getParameter("category");
+        String priceParam   = req.getParameter("price");
+        String ratingParam  = req.getParameter("rating");
+        String sortParam    = req.getParameter("sort");
+        String featuredParam= req.getParameter("featured");
+        String saleParam    = req.getParameter("sale");
+
+        int    categoryID   = (catParam    != null && !catParam.isEmpty())    ? safeInt(catParam, 0)       : 0;
+        int    priceRange   = (priceParam  != null && !priceParam.isEmpty())  ? safeInt(priceParam, 0)     : 0;
+        double minRating    = (ratingParam != null && !ratingParam.isEmpty()) ? safeDouble(ratingParam, 0) : 0;
+        boolean onlyFeatured= "1".equals(featuredParam);
+        boolean onlySale    = "1".equals(saleParam);
+        boolean hasFilter   = categoryID > 0 || priceRange > 0 || minRating > 0
+                              || (sortParam != null && !sortParam.isEmpty())
+                              || onlyFeatured || onlySale;
 
         try {
-            // Luôn load danh mục để hiển thị menu điều hướng
-            req.setAttribute("categories", categoryDAO.getAll());
+            // Luôn load danh mục để hiển thị dropdown
+            req.setAttribute("categories",   categoryDAO.getAll());
+            req.setAttribute("selectedCat",  categoryID);
 
-            if (catParam != null && !catParam.isEmpty()) {
-                // Lọc sản phẩm theo danh mục được chọn
-                int cid = Integer.parseInt(catParam);
-                req.setAttribute("products",     productDAO.getByCategory(cid));
-                req.setAttribute("selectedCat",  cid);
+            if (hasFilter) {
+                // Có filter → dùng method filter tổng hợp
+                req.setAttribute("products", productDAO.filter(
+                    categoryID, priceRange, minRating,
+                    sortParam, onlyFeatured, onlySale
+                ));
             } else {
-                // Trang chủ: lấy tất cả sản phẩm và danh sách nổi bật
-                req.setAttribute("products",     productDAO.getAllProducts());
-                req.setAttribute("featured",     productDAO.getFeatured(6));
-                req.setAttribute("selectedCat",  0);
+                // Không filter → trang chủ mặc định
+                req.setAttribute("products", productDAO.getAllProducts());
+                req.setAttribute("featured", productDAO.getFeatured(6));
             }
 
         } catch (Exception e) {
@@ -43,5 +58,12 @@ public class HomeServlet extends HttpServlet {
 
         // Forward sang view trang chủ
         req.getRequestDispatcher("/views/customer/home.jsp").forward(req, resp);
+    }
+
+    private int safeInt(String s, int def) {
+        try { return Integer.parseInt(s); } catch (Exception e) { return def; }
+    }
+    private double safeDouble(String s, double def) {
+        try { return Double.parseDouble(s); } catch (Exception e) { return def; }
     }
 }
