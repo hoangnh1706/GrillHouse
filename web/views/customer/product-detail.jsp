@@ -112,7 +112,7 @@
               </div>
 
               <!-- REVIEW SECTION -->
-              <div class="review-section">
+              <div class="review-section" id="customer-feedback">
                 <h2>⭐ Đánh giá sản phẩm</h2>
 
                 <!-- Thông báo -->
@@ -203,7 +203,14 @@
                     <div class="review-item ${loop.index >= showLimit ? 'review-hidden' : ''}">
                       <div class="review-header">
                         <div style="display:flex;align-items:center;gap:.75rem;">
-                          <div class="reviewer-avatar">${fn:substring(rv.reviewerName,0,1)}</div>
+                          <div class="reviewer-avatar">
+                            <c:choose>
+                              <c:when test="${not empty rv.reviewerAvatar}">
+                                <img src="${rv.reviewerAvatar}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                              </c:when>
+                              <c:otherwise>${fn:substring(rv.reviewerName,0,1)}</c:otherwise>
+                            </c:choose>
+                          </div>
                           <div>
                             <div class="reviewer-name">${rv.reviewerName}</div>
                             <div class="review-stars">
@@ -217,7 +224,27 @@
                         </span>
                       </div>
                       <c:if test="${not empty rv.comment}">
-                        <div class="review-comment">${rv.comment}</div>
+                        <c:choose>
+                          <c:when test="${fn:contains(rv.comment, '[Phản hồi admin]:')}">
+                            <div class="review-comment">
+                              ${fn:trim(fn:substringBefore(rv.comment, '[Phản hồi admin]:'))}
+                            </div>
+                            <div class="admin-reply">
+                              <div class="admin-reply-header">
+                                <span class="reply-author">Admin</span>
+                                <span class="reply-time">
+                                  <fmt:formatDate value="${rv.createdAt}" pattern="HH:mm dd/MM/yyyy" />
+                                </span>
+                              </div>
+                              <div class="admin-reply-content">
+                                ${fn:trim(fn:substringAfter(rv.comment, '[Phản hồi admin]:'))}
+                              </div>
+                            </div>
+                          </c:when>
+                          <c:otherwise>
+                            <div class="review-comment">${rv.comment}</div>
+                          </c:otherwise>
+                        </c:choose>
                       </c:if>
                     </div>
                   </c:forEach>

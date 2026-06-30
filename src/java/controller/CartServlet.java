@@ -35,7 +35,8 @@ public class CartServlet extends HttpServlet {
 
         // Lấy giỏ từ session, nếu chưa có thì tạo mới
         Cart cart = (Cart) session.getAttribute("cart");
-        if (cart == null) cart = new Cart();
+        if (cart == null)
+            cart = new Cart();
 
         try {
             switch (action == null ? "" : action) {
@@ -44,7 +45,8 @@ public class CartServlet extends HttpServlet {
                     // Lấy productID và số lượng từ request, tối thiểu là 1
                     int pid = Integer.parseInt(req.getParameter("productID"));
                     int qty = Integer.parseInt(req.getParameter("quantity"));
-                    if (qty < 1) qty = 1;
+                    if (qty < 1)
+                        qty = 1;
 
                     // Kiểm tra sản phẩm tồn tại và còn hàng mới thêm vào giỏ
                     Product p = productDAO.getByID(pid);

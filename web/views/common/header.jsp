@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="/views/common/chatbot.jsp" %>
 <nav style="
      background: #1a1a1a;
      padding: 0 2rem;
@@ -93,7 +94,8 @@
             </c:when>
             <c:otherwise>
                 <a href="${pageContext.request.contextPath}/login" style="
-                   color:#eee;text-decoration:none;font-size:.95rem;
+                   background:#f97316;color:#fff;text-decoration:none;
+                   padding:.45rem 1rem;border-radius:20px;font-size:.9rem;font-weight:600;
                    ">Đăng nhập</a>
                 <a href="${pageContext.request.contextPath}/register" style="
                    background:#f97316;color:#fff;text-decoration:none;
@@ -103,5 +105,22 @@
         </c:choose>
     </div>
 </nav>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const notifications = document.querySelectorAll('.success, .error');
+        notifications.forEach(function(el) {
+            if (el.innerHTML.trim() !== '') {
+                el.style.transition = 'opacity 0.5s ease-out';
+                setTimeout(function() {
+                    el.style.opacity = '0';
+                    setTimeout(function() {
+                        el.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            }
+        });
+    });
+</script>
         
-<%@ include file="/views/common/chatbot.jsp" %>
+

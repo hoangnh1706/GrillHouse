@@ -37,12 +37,15 @@
                             <%-- Avatar + tên --%>
                                 <div class="card" style="margin-bottom:1.5rem;">
                                     <div class="avatar-section">
-                                        <div class="avatar-circle">
+                                        <div class="avatar-circle" onclick="document.getElementById('avatarFileInput').click()" style="cursor:pointer;" title="Nhấn để đổi ảnh">
                                             <c:choose>
                                                 <c:when test="${not empty sessionScope.account.avatar}">
-                                                    <img src="${sessionScope.account.avatar}" alt="avatar">
+                                                    <img id="avatarPreview" src="${sessionScope.account.avatar}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
                                                 </c:when>
-                                                <c:otherwise>👤</c:otherwise>
+                                                <c:otherwise>
+                                                    <span id="avatarPreviewText">👤</span>
+                                                    <img id="avatarPreview" src="" alt="avatar" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                                                </c:otherwise>
                                             </c:choose>
                                         </div>
                                         <div class="avatar-info">
@@ -66,7 +69,7 @@
 
                                         <%-- Tab: Thông tin --%>
                                             <div id="tab-info" class="tab-panel active">
-                                                <form action="${pageContext.request.contextPath}/profile" method="post">
+                                                <form action="${pageContext.request.contextPath}/profile" method="post" enctype="multipart/form-data">
                                                     <input type="hidden" name="action" value="updateProfile">
 
                                                     <div class="info-grid">
@@ -92,6 +95,8 @@
                                                                 value="${sessionScope.account.address}"
                                                                 placeholder="Số nhà, đường, phường, quận, tỉnh...">
                                                         </div>
+
+                                                        <input type="file" id="avatarFileInput" name="avatarFile" accept="image/*" style="display:none;" onchange="previewAvatar(event)">
                                                     </div>
 
                                                     <button type="submit" class="btn-save">💾 Lưu thay đổi</button>
@@ -149,8 +154,23 @@
                         <c:if test="${not empty pwError}">
                             window.onload = function() {
                                 switchTab('password', document.querySelectorAll('.tab-btn')[1]);
-    };
+                            };
                         </c:if>
+
+                        function previewAvatar(event) {
+                            const file = event.target.files[0];
+                            if (file) {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    let img = document.getElementById('avatarPreview');
+                                    let text = document.getElementById('avatarPreviewText');
+                                    if(text) text.style.display = 'none';
+                                    img.src = e.target.result;
+                                    img.style.display = 'block';
+                                }
+                                reader.readAsDataURL(file);
+                            }
+                        }
                     </script>
             </body>
 

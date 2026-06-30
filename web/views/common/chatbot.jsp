@@ -1,274 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <!-- ========== CHATBOT WIDGET ========== -->
-        <style>
-            #chat-toggle {
-                position: fixed;
-                bottom: 1.5rem;
-                right: 1.5rem;
-                z-index: 9999;
-                width: 56px;
-                height: 56px;
-                border-radius: 50%;
-                background: #f97316;
-                border: none;
-                cursor: pointer;
-                box-shadow: 0 4px 20px rgba(249, 115, 22, .5);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: transform .2s, box-shadow .2s;
-            }
-
-            #chat-toggle:hover {
-                transform: scale(1.1);
-                box-shadow: 0 6px 28px rgba(249, 115, 22, .6);
-            }
-
-            #chat-toggle svg {
-                width: 26px;
-                height: 26px;
-                fill: #fff;
-            }
-
-            .chat-badge {
-                position: absolute;
-                top: -4px;
-                right: -4px;
-                background: #ef4444;
-                color: #fff;
-                border-radius: 50%;
-                width: 18px;
-                height: 18px;
-                font-size: .68rem;
-                font-weight: 700;
-                display: none;
-                align-items: center;
-                justify-content: center;
-            }
-
-            #chat-window {
-                position: fixed;
-                bottom: 5rem;
-                right: 1.5rem;
-                z-index: 9998;
-                width: 340px;
-                max-height: 520px;
-                background: #1a1a1a;
-                border: 1px solid #2a2a2a;
-                border-radius: 18px;
-                box-shadow: 0 16px 48px rgba(0, 0, 0, .6);
-                display: flex;
-                flex-direction: column;
-                transform: scale(.85) translateY(20px);
-                opacity: 0;
-                pointer-events: none;
-                transition: transform .25s ease, opacity .25s ease;
-                font-family: 'DM Sans', sans-serif;
-            }
-
-            #chat-window.open {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-                pointer-events: all;
-            }
-
-            .cw-head {
-                background: linear-gradient(90deg, #f97316, #ea580c);
-                border-radius: 18px 18px 0 0;
-                padding: .85rem 1rem;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            .cw-head-left {
-                display: flex;
-                align-items: center;
-                gap: .6rem;
-            }
-
-            .cw-avatar {
-                width: 36px;
-                height: 36px;
-                border-radius: 50%;
-                background: #fff2;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.2rem;
-            }
-
-            .cw-title {
-                color: #fff;
-                font-weight: 700;
-                font-size: .92rem;
-            }
-
-            .cw-sub {
-                color: rgba(255, 255, 255, .75);
-                font-size: .72rem;
-                margin-top: .1rem;
-            }
-
-            .cw-close {
-                background: none;
-                border: none;
-                color: #fff;
-                cursor: pointer;
-                font-size: 1.2rem;
-                padding: .2rem .4rem;
-                border-radius: 6px;
-                transition: background .2s;
-            }
-
-            .cw-close:hover {
-                background: rgba(255, 255, 255, .2);
-            }
-
-            .cw-messages {
-                flex: 1;
-                overflow-y: auto;
-                padding: 1rem;
-                display: flex;
-                flex-direction: column;
-                gap: .65rem;
-                max-height: 300px;
-                scrollbar-width: thin;
-                scrollbar-color: #333 transparent;
-            }
-
-            .cw-messages::-webkit-scrollbar {
-                width: 4px;
-            }
-
-            .cw-messages::-webkit-scrollbar-thumb {
-                background: #333;
-                border-radius: 4px;
-            }
-
-            .msg {
-                display: flex;
-                gap: .5rem;
-                align-items: flex-end;
-                max-width: 85%;
-            }
-
-            .msg.bot {
-                align-self: flex-start;
-            }
-
-            .msg.user {
-                align-self: flex-end;
-                flex-direction: row-reverse;
-            }
-
-            .msg-avatar {
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                background: #f97316;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: .85rem;
-                flex-shrink: 0;
-            }
-
-            .msg-bubble {
-                padding: .55rem .85rem;
-                border-radius: 14px;
-                font-size: .87rem;
-                line-height: 1.5;
-            }
-
-            .msg.bot .msg-bubble {
-                background: #252525;
-                color: #e5e5e5;
-                border-bottom-left-radius: 4px;
-            }
-
-            .msg.user .msg-bubble {
-                background: #f97316;
-                color: #fff;
-                border-bottom-right-radius: 4px;
-            }
-
-            .cw-quick {
-                padding: .6rem 1rem .4rem;
-                display: flex;
-                flex-wrap: wrap;
-                gap: .4rem;
-            }
-
-            .quick-btn {
-                background: #252525;
-                border: 1.5px solid #333;
-                color: #f97316;
-                border-radius: 20px;
-                padding: .35rem .8rem;
-                font-size: .8rem;
-                cursor: pointer;
-                font-family: inherit;
-                font-weight: 600;
-                transition: all .2s;
-                white-space: nowrap;
-            }
-
-            .quick-btn:hover {
-                background: #f97316;
-                color: #fff;
-                border-color: #f97316;
-            }
-
-            .cw-input-row {
-                display: flex;
-                gap: .5rem;
-                padding: .75rem 1rem;
-                border-top: 1px solid #252525;
-            }
-
-            #chat-input {
-                flex: 1;
-                background: #252525;
-                border: 1.5px solid #333;
-                border-radius: 20px;
-                color: #eee;
-                padding: .5rem 1rem;
-                font-size: .88rem;
-                font-family: inherit;
-                outline: none;
-                transition: border .2s;
-            }
-
-            #chat-input:focus {
-                border-color: #f97316;
-            }
-
-            #chat-send {
-                background: #f97316;
-                border: none;
-                border-radius: 50%;
-                width: 36px;
-                height: 36px;
-                cursor: pointer;
-                flex-shrink: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: background .2s;
-            }
-
-            #chat-send:hover {
-                background: #ea6a05;
-            }
-
-            #chat-send svg {
-                width: 16px;
-                height: 16px;
-                fill: #fff;
-            }
-        </style>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/chatbot.css">
 
         <!-- Nút toggle -->
         <button id="chat-toggle" onclick="toggleChat()" title="Chat với Chef AI">
@@ -310,27 +43,15 @@
 
         <script>
             (function () {
-                const KB = [
-                    { keys: ['không cay', 'ít cay', 'nhẹ', 'mild'], reply: '🥩 Các món ít/không cay:\n• <b>Vịt nướng mắm gừng</b> – vị đậm đà\n• <b>Gà nướng muối ớt</b> – có thể bỏ ớt\n• <b>Bò nướng lá lốt</b> – thơm ngon\nBạn muốn xem món nào?' },
-                    { keys: ['combo', 'nhóm', '2 người', '3 người', '4 người', 'gia đình'], reply: '👥 Combo theo nhóm:\n• <b>Combo 2 người</b> ~250.000đ\n• <b>Combo 4 người</b> ~480.000đ\n• <b>Combo gia đình</b> ~750.000đ\nĐơn ≥500.000đ giảm <b>10%</b> tự động! 🎉' },
-                    { keys: ['mới nhất', 'món mới', 'mới ra'], reply: '✨ Món mới tại GrillHouse:\n• <b>Sườn heo nướng BBQ</b>\n• <b>Gà nướng sa tế</b>\n• <b>Mực nướng bơ tỏi</b>\nXem đầy đủ tại trang chủ! 🍖' },
-                    { keys: ['tra cứu', 'đơn hàng', 'xem đơn', 'kiểm tra đơn'], reply: '📦 Tra đơn hàng:\n👉 <b>Tài khoản → Đơn hàng của tôi</b>\nHotline: <b style="color:#f97316">1900 1234</b>' },
-                    { keys: ['giờ', 'mở cửa', 'đóng cửa'], reply: '🕐 Giờ mở cửa:\n• T2–T6: <b>10:00–22:00</b>\n• T7–CN: <b>09:00–23:00</b>' },
-                    { keys: ['giao hàng', 'ship', 'phí ship'], reply: '🛵 Giao hàng:\n• <b>Miễn phí</b> toàn bộ đơn\n• Thời gian: <b>30–45 phút</b>' },
-                    { keys: ['thanh toán', 'trả tiền', 'cod', 'vnpay', 'tiền mặt'], reply: '💳 Thanh toán:\n• 💵 <b>COD</b> – tiền mặt khi nhận\n• 🏦 <b>VNPay</b> – chuyển khoản' },
-                    { keys: ['hải sản', 'tôm', 'mực', 'cá'], reply: '🦐 Hải sản nướng:\n• Tôm hùm bơ tỏi\n• Mực muối ớt\n• Cá lóc nướng trui' },
-                    { keys: ['giảm giá', 'khuyến mãi', 'sale', 'voucher'], reply: '🎉 Ưu đãi:\n• Giảm <b>10%</b> cho đơn từ 500.000đ\n• Xem món SALE tại trang chủ' },
-                    { keys: ['xin chào', 'hello', 'hi', 'chào', 'hey'], reply: '👋 Xin chào! Mình là <b>Chef AI</b> của GrillHouse 🔥\nMình tư vấn món ăn, combo, giao hàng, thanh toán. Hỏi gì đi nào! 😊' },
-                    { keys: ['cảm ơn', 'thanks', 'thank'], reply: '😊 Không có gì! Chúc bạn ngon miệng! 🔥🥩' }
-                ];
-                const DEFAULT_REPLY = '🤔 Mình chưa hiểu câu hỏi này.\nBạn hỏi về: món ăn, combo, giao hàng, thanh toán, đơn hàng?\nHotline: <b style="color:#f97316">1900 1234</b>';
-
                 let isOpen = false, greeted = false;
 
+                // Hàm mở/đóng cửa sổ chat
                 window.toggleChat = function () {
                     isOpen = !isOpen;
                     document.getElementById('chat-window').classList.toggle('open', isOpen);
                     document.getElementById('chat-badge').style.display = 'none';
+        
+                    // Lời chào tự động khi mở chat lần đầu
                     if (isOpen && !greeted) {
                         greeted = true;
                         setTimeout(() => {
@@ -340,8 +61,10 @@
                     }
                 };
 
+                // Hàm gửi tin nhắn từ các nút quick-reply
                 window.sendQuick = function (text) { sendMsg(text); };
-
+                 
+                 // Hàm gửi tin nhắn từ ô input
                 window.sendMessage = function () {
                     const input = document.getElementById('chat-input');
                     const text = input.value.trim();
@@ -350,18 +73,28 @@
                     sendMsg(text);
                 };
 
+                // Hàm xử lý logic gửi tin nhắn
                 function sendMsg(text) {
                     addMsg('user', text);
                     document.getElementById('cw-quick').style.display = 'none';
-                    setTimeout(() => addMsg('bot', getReply(text.toLowerCase())), 600);
+                    
+                    // Gửi lên server xử lý
+                    fetch('${pageContext.request.contextPath}/api/chatbot', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'message=' + encodeURIComponent(text)
+                    })
+                    .then(res => res.text())
+                    .then(reply => {
+                        addMsg('bot', reply);
+                    })
+                    .catch(err => {
+                        console.error("Lỗi:", err);
+                        addMsg('bot', 'Xin lỗi, hệ thống đang bận. Vui lòng thử lại sau!');
+                    });
                 }
 
-                function getReply(text) {
-                    for (const item of KB)
-                        if (item.keys.some(k => text.includes(k))) return item.reply;
-                    return DEFAULT_REPLY;
-                }
-
+                // Hàm thêm tin nhắn vào giao diện
                 function addMsg(type, html) {
                     const c = document.getElementById('cw-messages');
                     const w = document.createElement('div');
@@ -373,9 +106,10 @@
                     c.scrollTop = c.scrollHeight;
                 }
 
+                // Tự động hiển thị badge sau 3 giây nếu chưa mở
                 setTimeout(() => {
                     if (!isOpen) document.getElementById('chat-badge').style.display = 'flex';
                 }, 3000);
             })();
         </script>
-        <!-- ========== END CHATBOT ========== -->
+       

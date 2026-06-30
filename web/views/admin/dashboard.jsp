@@ -5,6 +5,8 @@
       <html lang="vi">
 
       <head>
+  <!-- ======================== HEAD BLOCK ======================== -->
+  <!-- Khai báo meta, title và các thư viện CSS/Font -->
         <meta charset="UTF-8">
         <title>Dashboard – Admin</title>
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
@@ -13,18 +15,25 @@
       </head>
 
       <body>
+  <!-- ======================== BODY BLOCK ======================== -->
+  <!-- Khung giao diện chính của Dashboard Admin -->
         <div class="sidebar">
+          <!-- ======================== SIDEBAR BLOCK ======================== -->
+          <!-- Menu điều hướng bên trái dành cho Admin -->
           <div class="logo">⚙️ Admin Panel</div>
-          <a href="${pageContext.request.contextPath}/admin/home" class="active">📊 Dashboard</a>
-          <a href="${pageContext.request.contextPath}/admin/products">🍖 Món ăn</a>
-          <a href="${pageContext.request.contextPath}/admin/orders">📦 Đơn hàng</a>
-          <a href="${pageContext.request.contextPath}/home" style="margin-top:2rem;">← Về trang chủ</a>
+          <a href="${pageContext.request.contextPath}/admin/home" class="active"> Dashboard</a>
+          <a href="${pageContext.request.contextPath}/admin/products"> Món ăn</a>
+          <a href="${pageContext.request.contextPath}/admin/orders"> Đơn hàng</a>
+          <a href="${pageContext.request.contextPath}/admin/feedback"> Feedback</a>
+          <a href="${pageContext.request.contextPath}/admin/chatbot"> Chatbot</a>
+          <a href="${pageContext.request.contextPath}/logout" style="margin-top:2rem;">← Đăng xuất</a>
         </div>
 
         <div class="main">
+          <!-- ======================== MAIN CONTENT BLOCK ======================== -->
+          <!-- Nội dung chính hiển thị các số liệu thống kê -->
           <div class="welcome">
-            <h1>👋 Xin chào, ${sessionScope.account.fullName}!</h1>
-            <p>Đây là tổng quan hoạt động cửa hàng hôm nay.</p>
+            <h1>Tổng quan</h1>
           </div>
 
           <div class="stats">
@@ -57,48 +66,7 @@
             </div>
           </div>
 
-          <!-- Breakdown trạng thái -->
-          <div class="section">
-            <h2>🧾 Tình trạng đơn hàng</h2>
-            <div class="status-grid">
-              <a class="status-item" href="${pageContext.request.contextPath}/admin/orders?status=0">
-                <div class="status-item-left">
-                  <span class="status-dot s0"></span>
-                  <div>⏳ Chờ xác nhận</div>
-                </div>
-                <div class="status-item-right">${statusCounts[0]}</div>
-              </a>
-              <a class="status-item" href="${pageContext.request.contextPath}/admin/orders?status=1">
-                <div class="status-item-left">
-                  <span class="status-dot s1"></span>
-                  <div>✅ Đã xác nhận</div>
-                </div>
-                <div class="status-item-right">${statusCounts[1]}</div>
-              </a>
-              <a class="status-item" href="${pageContext.request.contextPath}/admin/orders?status=2">
-                <div class="status-item-left">
-                  <span class="status-dot s2"></span>
-                  <div>🚚 Đang giao</div>
-                </div>
-                <div class="status-item-right">${statusCounts[2]}</div>
-              </a>
-              <a class="status-item" href="${pageContext.request.contextPath}/admin/orders?status=3">
-                <div class="status-item-left">
-                  <span class="status-dot s3"></span>
-                  <div>🎉 Hoàn thành</div>
-                </div>
-                <div class="status-item-right">${statusCounts[3]}</div>
-              </a>
-              <a class="status-item" href="${pageContext.request.contextPath}/admin/orders?status=4">
-                <div class="status-item-left">
-                  <span class="status-dot s4"></span>
-                  <div>❌ Đã hủy</div>
-                </div>
-                <div class="status-item-right">${statusCounts[4]}</div>
-              </a>
-            </div>
-          </div>
-
+        
           <div class="two-cols">
             <div class="section">
               <h2>📈 Doanh thu 7 ngày</h2>
@@ -140,7 +108,7 @@
           </div>
 
           <!-- Doanh thu theo tháng & xu hướng -->
-          <div class="section">
+<!--          <div class="section">
             <h2>📅 Doanh thu theo tháng (12 tháng) + xu hướng</h2>
             <div class="trend-table">
               <table class="mini-table">
@@ -160,7 +128,7 @@
                 </tbody>
               </table>
             </div>
-          </div>
+          </div>-->
 
           <!-- Đơn hàng mới nhất -->
           <h2>📋 Đơn hàng gần nhất</h2>
@@ -170,6 +138,7 @@
                 <th>#</th>
                 <th>Khách hàng</th>
                 <th>Ngày đặt</th>
+                <th>Sản phẩm</th>
                 <th>Tổng tiền</th>
                 <th>Trạng thái</th>
               </tr>
@@ -182,6 +151,7 @@
                   <td style="color:#777;">
                     <fmt:formatDate value="${o.orderDate}" pattern="dd/MM HH:mm" />
                   </td>
+                  <td>${o.productName}</td>
                   <td class="price">
                     <fmt:formatNumber value="${o.finalAmount}" pattern="#,###" />đ
                   </td>

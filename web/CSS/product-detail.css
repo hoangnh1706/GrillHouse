@@ -412,6 +412,39 @@ body {
     color: #aaa;
     font-size: .88rem;
     line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.admin-reply {
+    margin-top: 1rem;
+    border-left: 3px solid #f97316;
+    padding: 1rem 1rem 1rem 1rem;
+    background: #111;
+    border-radius: 12px;
+}
+
+.admin-reply-header {
+    display: flex;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-bottom: .5rem;
+    color: #ccc;
+    font-size: .82rem;
+}
+
+.reply-author {
+    font-weight: 700;
+    color: #f97316;
+}
+
+.reply-time {
+    color: #777;
+}
+
+.admin-reply-content {
+    color: #e5e5e5;
+    line-height: 1.7;
+    white-space: pre-wrap;
 }
 
 .no-reviews {

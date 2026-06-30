@@ -3,41 +3,43 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/home.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/order-list.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/order-history.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/dal/OrderDAO.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/admin/AdminFeedbackServlet.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/model/Order.java</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/profile.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/checkout.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/dashboard.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/cart.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/order-list.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/model/Review.java</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/product-form.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/product-detail.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/index.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/register.css</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/register.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/login.css</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/product-detail.css</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/profile.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/home.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/model/Category.java</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/login.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/common/header.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/product-list.jsp</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/order-history.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/index.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/product-list.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/dal/ReviewDAO.java</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/payment-failed.jsp</file>
-=======
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/combo4nguoi.png</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/bo_la_lot.jpg</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/VNPayReturnServlet.java</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/bia-heineken-.jpg</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/Tra-Da.jpg</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/images/combo2nguoi.png</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/home.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/WEB-INF/web.xml</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/admin/AdminFilter.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/admin/AdminProductServlet.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/admin/AdminOrderServlet.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/dashboard.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/model/OrderDetail.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/GoogleAuthServlet.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/model/CartItem.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/common/chatbot.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/index.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/register.jsp</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/model/Account.java</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/GeminiServlet.java</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/customer/checkout.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/dal/AccountDAO.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/dal/DBContext.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/profile.css</file>
             <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/common/header.jsp</file>
-            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/VNPayServlet.java</file>
->>>>>>> 8a15530ae61aa816d7ae456c237c0f2cec730dec
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/admin/AdminDashboardServlet.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/controller/HomeServlet.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/CSS/chatbot.css</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/web/views/admin/feedback.jsp</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/dal/ProductDAO.java</file>
+            <file>file:/D:/SU26/PRJ301a_preparation/Project/GrillHouse/src/java/dal/CategoryDAO.java</file>
         </group>
     </open-files>
 </project-private>

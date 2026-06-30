@@ -52,7 +52,9 @@
                     <div class="order-card">
                       <div class="order-head">
                         <div>
-                          <div class="order-id">#${o.orderID}</div>
+                          <div class="order-id">
+                            🍽️ ${o.productName} 
+                          </div>
                           <div class="order-date">
                             <fmt:formatDate value="${o.orderDate}" pattern="dd/MM/yyyy HH:mm" />
                           </div>

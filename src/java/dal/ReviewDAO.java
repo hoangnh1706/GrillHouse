@@ -6,11 +6,84 @@ import model.Review;
 
 public class ReviewDAO extends DBContext {
 
+    /** Lấy danh sách feedback cho admin */
+    public List<Review> getAllForAdmin() throws SQLException {
+        List<Review> list = new ArrayList<>();
+        String sql =
+            "SELECT r.*, a.FullName AS ReviewerName, a.Email AS ReviewerEmail, a.Avatar AS ReviewerAvatar, p.ProductName " +
+            "FROM Review r JOIN Account a ON r.AccountID = a.AccountID " +
+            "JOIN Product p ON r.ProductID = p.ProductID " +
+            "ORDER BY r.ReviewDate DESC";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Review rv = new Review();
+                rv.setReviewID(rs.getInt("ReviewID"));
+                rv.setProductID(rs.getInt("ProductID"));
+                rv.setAccountID(rs.getInt("AccountID"));
+                rv.setReviewerName(rs.getString("ReviewerName"));
+                rv.setReviewerAvatar(rs.getString("ReviewerAvatar"));
+                rv.setReviewerEmail(rs.getString("ReviewerEmail"));
+                rv.setProductName(rs.getString("ProductName"));
+                rv.setRating(rs.getInt("Rating"));
+                rv.setComment(rs.getString("Comment"));
+                rv.setCreatedAt(rs.getTimestamp("ReviewDate"));
+                list.add(rv);
+            }
+        }
+        return list;
+    }
+
+    /** Xóa feedback theo ID */
+    public boolean delete(int reviewID) throws SQLException {
+        String sql = "DELETE FROM Review WHERE ReviewID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, reviewID);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    /** Ghi phản hồi của admin vào feedback */
+    public boolean updateAdminReply(int reviewID, String reply) throws SQLException {
+        if (reply == null || reply.trim().isEmpty()) {
+            return false;
+        }
+
+        String currentComment = getCommentByID(reviewID);
+        String marker = "[Phản hồi admin]: ";
+        String newComment = (currentComment == null || currentComment.isBlank())
+                ? marker + reply.trim()
+                : currentComment.trim() + "\n\n" + marker + reply.trim();
+
+        String sql = "UPDATE Review SET Comment = ? WHERE ReviewID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newComment);
+            ps.setInt(2, reviewID);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    private String getCommentByID(int reviewID) throws SQLException {
+        String sql = "SELECT Comment FROM Review WHERE ReviewID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, reviewID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Comment");
+            }
+        }
+        return null;
+    }
+
     /** Lấy tất cả đánh giá của 1 sản phẩm, mới nhất trước */
     public List<Review> getByProduct(int productID) throws SQLException {
         List<Review> list = new ArrayList<>();
         String sql =
-            "SELECT r.*, a.FullName AS ReviewerName " +
+            "SELECT r.*, a.FullName AS ReviewerName, a.Avatar AS ReviewerAvatar " +
             "FROM Review r JOIN Account a ON r.AccountID = a.AccountID " +
             "WHERE r.ProductID = ? ORDER BY r.ReviewDate DESC";
         try (Connection conn = getConnection();
@@ -23,6 +96,7 @@ public class ReviewDAO extends DBContext {
                 rv.setProductID(rs.getInt("ProductID"));
                 rv.setAccountID(rs.getInt("AccountID"));
                 rv.setReviewerName(rs.getString("ReviewerName"));
+                rv.setReviewerAvatar(rs.getString("ReviewerAvatar"));
                 rv.setRating(rs.getInt("Rating"));
                 rv.setComment(rs.getString("Comment"));
                 rv.setCreatedAt(rs.getTimestamp("ReviewDate"));
@@ -35,7 +109,7 @@ public class ReviewDAO extends DBContext {
     /** Lấy review của 1 user với 1 sản phẩm (để hiện lại khi sửa) */
     public Review getByAccountAndProduct(int accountID, int productID) throws SQLException {
         String sql =
-            "SELECT r.*, a.FullName AS ReviewerName " +
+            "SELECT r.*, a.FullName AS ReviewerName, a.Avatar AS ReviewerAvatar " +
             "FROM Review r JOIN Account a ON r.AccountID = a.AccountID " +
             "WHERE r.AccountID = ? AND r.ProductID = ?";
         try (Connection conn = getConnection();
@@ -49,6 +123,7 @@ public class ReviewDAO extends DBContext {
                 rv.setProductID(rs.getInt("ProductID"));
                 rv.setAccountID(rs.getInt("AccountID"));
                 rv.setReviewerName(rs.getString("ReviewerName"));
+                rv.setReviewerAvatar(rs.getString("ReviewerAvatar"));
                 rv.setRating(rs.getInt("Rating"));
                 rv.setComment(rs.getString("Comment"));
                 rv.setCreatedAt(rs.getTimestamp("ReviewDate"));

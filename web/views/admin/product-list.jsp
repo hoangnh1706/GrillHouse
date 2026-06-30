@@ -5,6 +5,8 @@
       <html lang="vi">
 
       <head>
+  <!-- ======================== HEAD BLOCK ======================== -->
+  <!-- Khai báo meta, title và các thư viện CSS/Font -->
         <meta charset="UTF-8">
         <title>Quản lý món ăn – Admin</title>
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
@@ -13,15 +15,23 @@
       </head>
 
       <body>
+  <!-- ======================== BODY BLOCK ======================== -->
+  <!-- Khung giao diện chính trang quản lý món ăn -->
         <div class="sidebar">
+          <!-- ======================== SIDEBAR BLOCK ======================== -->
+          <!-- Menu điều hướng bên trái dành cho Admin -->
           <div class="logo">⚙️ Admin Panel</div>
-          <a href="${pageContext.request.contextPath}/admin/home">📊 Dashboard</a>
-          <a href="${pageContext.request.contextPath}/admin/products" class="active">🍖 Món ăn</a>
-          <a href="${pageContext.request.contextPath}/admin/orders">📦 Đơn hàng</a>
-          <a href="${pageContext.request.contextPath}/home" style="margin-top:2rem;">← Về trang chủ</a>
+          <a href="${pageContext.request.contextPath}/admin/home"> Dashboard</a>
+          <a href="${pageContext.request.contextPath}/admin/products" class="active"> Món ăn</a>
+          <a href="${pageContext.request.contextPath}/admin/orders"> Đơn hàng</a>
+          <a href="${pageContext.request.contextPath}/admin/feedback"> Feedback</a>
+          <a href="${pageContext.request.contextPath}/admin/chatbot"> Chatbot</a>
+          <a href="${pageContext.request.contextPath}/logout" style="margin-top:2rem;">← Đăng xuất</a>
         </div>
 
         <div class="main">
+          <!-- ======================== MAIN CONTENT BLOCK ======================== -->
+          <!-- Bảng danh sách các món ăn và nút thêm mới -->
           <div class="toolbar">
             <h1>🍖 Quản lý món ăn</h1>
             <a href="${pageContext.request.contextPath}/admin/products?action=add" class="btn-add">+ Thêm món</a>

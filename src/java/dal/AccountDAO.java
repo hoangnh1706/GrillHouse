@@ -21,19 +21,7 @@ public class AccountDAO extends DBContext {
         return null;
     }
 
-    /**
-     * Tìm account theo email (dùng cho Google Login & kiểm tra trùng email khi đăng ký)
-     */
-    public Account findByEmail(String email) throws SQLException {
-        String sql = "SELECT * FROM Account WHERE Email=?";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapRow(rs);
-        }
-        return null;
-    }
+    
 
     /**
      * Đăng ký tài khoản mới
@@ -51,20 +39,6 @@ public class AccountDAO extends DBContext {
             ps.setString(3, a.getPhone());
             ps.setString(4, a.getPassword()); // đã hash từ Controller
             ps.setString(5, a.getAddress());
-            return ps.executeUpdate() > 0;
-        }
-    }
-
-    /**
-     * Tạo tài khoản từ Google (không cần password)
-     */
-    public boolean insertGoogleAccount(Account a) throws SQLException {
-        String sql = "INSERT INTO Account(FullName,Email,Password,Avatar,IsAdmin) VALUES(?,?,'GOOGLE_AUTH',?,0)";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, a.getFullName());
-            ps.setString(2, a.getEmail());
-            ps.setString(3, a.getAvatar());
             return ps.executeUpdate() > 0;
         }
     }
@@ -124,18 +98,48 @@ public class AccountDAO extends DBContext {
         return null;
     }
 
-    // ---- helper ----
-    private Account mapRow(ResultSet rs) throws SQLException {
-        Account a = new Account();
-        a.setAccountID(rs.getInt("AccountID"));
-        a.setFullName(rs.getString("FullName"));
-        a.setEmail(rs.getString("Email"));
-        a.setPhone(rs.getString("Phone"));
-        a.setAddress(rs.getString("Address"));
-        a.setAvatar(rs.getString("Avatar"));
-        a.setAdmin(rs.getBoolean("IsAdmin"));
-        a.setActive(rs.getBoolean("IsActive"));
-        a.setCreatedAt(rs.getTimestamp("CreatedAt"));
-        return a;
+    /**
+ * Tìm tài khoản theo email (dùng cho Google Login & kiểm tra trùng email)
+ */
+public Account findByEmail(String email) throws SQLException {
+    String sql = "SELECT * FROM Account WHERE Email = ? AND IsActive = 1";
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, email);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) return mapRow(rs);
     }
+    return null;
+}
+ 
+/**
+ * Tạo tài khoản mới từ Google OAuth2
+ * Không cần mật khẩu thật — lưu 'GOOGLE_AUTH' làm placeholder
+ */
+public boolean insertGoogleAccount(Account a) throws SQLException {
+    String sql = "INSERT INTO Account (FullName, Email, Password, Avatar, IsAdmin, IsActive) " +
+                 "VALUES (?, ?, 'GOOGLE_AUTH', ?, 0, 1)";
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, a.getFullName());
+        ps.setString(2, a.getEmail());
+        ps.setString(3, a.getAvatar()); // có thể null
+        return ps.executeUpdate() > 0;
+    }
+}
+ 
+// ── mapRow helper (nếu chưa có) ──
+private Account mapRow(ResultSet rs) throws SQLException {
+    Account a = new Account();
+    a.setAccountID(rs.getInt("AccountID"));
+    a.setFullName(rs.getString("FullName"));
+    a.setEmail(rs.getString("Email"));
+    a.setPhone(rs.getString("Phone"));
+    a.setAddress(rs.getString("Address"));
+    a.setAvatar(rs.getString("Avatar"));
+    a.setAdmin(rs.getBoolean("IsAdmin"));
+    a.setActive(rs.getBoolean("IsActive"));
+    a.setCreatedAt(rs.getTimestamp("CreatedAt"));
+    return a;
+}
 }

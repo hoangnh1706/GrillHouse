@@ -15,6 +15,7 @@ public class Order {
     private int        orderID;
     private int        accountID;
     private String     customerName;   // join từ Account
+    private String     productName;
     private Date       orderDate;
     private BigDecimal totalAmount;
     private BigDecimal discountAmount;
@@ -44,6 +45,15 @@ public class Order {
         }
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    
     public int        getOrderID()                  { return orderID; }
     public void       setOrderID(int v)             { this.orderID = v; }
     public int        getAccountID()                { return accountID; }

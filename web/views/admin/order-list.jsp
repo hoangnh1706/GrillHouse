@@ -5,6 +5,8 @@
             <html lang="vi">
 
             <head>
+  <!-- ======================== HEAD BLOCK ======================== -->
+  <!-- Khai báo meta, title và các thư viện CSS/Font -->
                 <meta charset="UTF-8">
                 <title>Quản lý đơn hàng – Admin</title>
                 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
@@ -13,18 +15,26 @@
             </head>
 
             <body>
+  <!-- ======================== BODY BLOCK ======================== -->
+  <!-- Khung giao diện chính trang quản lý đơn hàng -->
 
                 <div class="sidebar">
+                    <!-- ======================== SIDEBAR BLOCK ======================== -->
+                    <!-- Menu điều hướng bên trái dành cho Admin -->
                     <div class="logo">⚙️ Admin Panel</div>
-                    <a href="${pageContext.request.contextPath}/admin/home">📊 Dashboard</a>
-                    <a href="${pageContext.request.contextPath}/admin/products">🍖 Món ăn</a>
-                    <a href="${pageContext.request.contextPath}/admin/orders" class="active">📦 Đơn hàng</a>
-                    <a href="${pageContext.request.contextPath}/home" style="margin-top:2rem;">← Về trang chủ</a>
+                    <a href="${pageContext.request.contextPath}/admin/home"> Dashboard</a>
+                    <a href="${pageContext.request.contextPath}/admin/products"> Món ăn</a>
+                    <a href="${pageContext.request.contextPath}/admin/orders" class="active"> Đơn hàng</a>
+                    <a href="${pageContext.request.contextPath}/admin/feedback" > Feedback</a>
+                    <a href="${pageContext.request.contextPath}/admin/chatbot"> Chatbot</a>
+                    <a href="${pageContext.request.contextPath}/logout" style="margin-top:2rem;">← Đăng xuất</a>
                 </div>
 
                 <div class="main">
+                    <!-- ======================== MAIN CONTENT BLOCK ======================== -->
+                    <!-- Bảng danh sách các đơn đặt hàng -->
                     <div class="page-header">
-                        <h1>📦 Quản lý đơn hàng</h1>
+                        <h1> Quản lý đơn hàng</h1>
                         <span class="total-badge">${orders.size()} đơn</span>
                     </div>
 
@@ -60,13 +70,14 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>STT</th>
                                             <th>Khách hàng</th>
+                                            <th>Tên món</th>
                                             <th>SĐT</th>
                                             <th>Địa chỉ</th>
                                             <th>Ngày đặt</th>
                                             <th>Tổng tiền</th>
-                                            <th>Thanh toán</th>
+<!--                                            <th>Thanh toán</th>-->
                                             <th>Trạng thái</th>
                                             <th>Cập nhật</th>
                                         </tr>
@@ -74,8 +85,10 @@
                                     <tbody>
                                         <c:forEach var="o" items="${orders}">
                                             <tr>
-                                                <td class="order-id">#${o.orderID}</td>
+                                                <td class="order-id">No${o.orderID}</td>
                                                 <td class="customer">${o.customerName}</td>
+                                                <td style="color:#666;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+                                                    title="${o.productName}">${o.productName}</td>
                                                 <td style="color:#888;">${o.phone}</td>
                                                 <td style="color:#888;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
                                                     title="${o.shipAddress}">${o.shipAddress}</td>
@@ -86,18 +99,7 @@
                                                 <td class="price">
                                                     <fmt:formatNumber value="${o.finalAmount}" pattern="#,###" />đ
                                                 </td>
-                                                <td><span class="method-badge">${o.paymentMethod}</span>
-                                                    <c:if test="${o.paid}">
-                                                        <span
-                                                            style="display:block;margin-top:.3rem;font-size:.72rem;color:#4ade80;font-weight:700;">✔
-                                                            Đã thu</span>
-                                                    </c:if>
-                                                    <c:if test="${!o.paid}">
-                                                        <span
-                                                            style="display:block;margin-top:.3rem;font-size:.72rem;color:#fbbf24;font-weight:700;">⏳
-                                                            Chưa thu</span>
-                                                    </c:if>
-                                                </td>
+                                                
                                                 <td><span class="status s${o.status}">${o.statusLabel}</span></td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/admin/orders"

@@ -1,0 +1,16 @@
+.chatbot-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+.chatbot-table th, .chatbot-table td { padding: 1rem; border-bottom: 1px solid #333; text-align: left; }
+.chatbot-table th { background: #2a2a2a; color: #f97316; font-weight: 600; }
+.chatbot-table td { color: #ddd; vertical-align: top; }
+.chatbot-table pre { font-family: inherit; margin: 0; white-space: pre-wrap; }
+.btn { padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; display: inline-block; }
+.btn-primary { background: #f97316; color: white; }
+.btn-danger { background: #ef4444; color: white; }
+.btn-edit { background: #3b82f6; color: white; margin-right: 0.5rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; color: #bbb; }
+.form-group input, .form-group textarea { width: 100%; padding: 0.8rem; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 8px; outline: none; }
+.form-group input:focus, .form-group textarea:focus { border-color: #f97316; }
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: #1a1a1a; padding: 2rem; border-radius: 12px; width: 500px; max-width: 90%; }
+.modal.active { display: flex; }

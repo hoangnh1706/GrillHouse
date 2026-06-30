@@ -78,7 +78,12 @@ public class OrderDAO extends DBContext {
     /** Lịch sử đơn hàng của 1 khách hàng */
     public List<Order> getByAccount(int accountID) throws SQLException {
         String sql =
-            "SELECT o.*, a.FullName AS CustomerName " +
+            "SELECT o.*, a.FullName AS CustomerName, " +
+            "       STUFF((SELECT ', ' + p.ProductName " +
+            "              FROM OrderDetail od " +
+            "              JOIN Product p ON od.ProductID = p.ProductID " +
+            "              WHERE od.OrderID = o.OrderID " +
+            "              FOR XML PATH('')), 1, 2, '') AS ProductName " +
             "FROM [Order] o JOIN Account a ON o.AccountID=a.AccountID " +
             "WHERE o.AccountID=? ORDER BY o.OrderDate DESC";
         return queryOrders(sql, accountID);
@@ -87,7 +92,12 @@ public class OrderDAO extends DBContext {
     /** Chi tiết 1 đơn hàng (kèm danh sách món) */
     public Order getByID(int orderID) throws SQLException {
         String sqlOrder =
-            "SELECT o.*, a.FullName AS CustomerName " +
+            "SELECT o.*, a.FullName AS CustomerName, " +
+            "       STUFF((SELECT ', ' + p.ProductName " +
+            "              FROM OrderDetail od " +
+            "              JOIN Product p ON od.ProductID = p.ProductID " +
+            "              WHERE od.OrderID = o.OrderID " +
+            "              FOR XML PATH('')), 1, 2, '') AS ProductName " +
             "FROM [Order] o JOIN Account a ON o.AccountID=a.AccountID " +
             "WHERE o.OrderID=?";
         List<Order> list = queryOrders(sqlOrder, orderID);
@@ -101,7 +111,12 @@ public class OrderDAO extends DBContext {
     /** Admin: lấy tất cả đơn, lọc theo status (-1 = tất cả) */
     public List<Order> getAll(int status) throws SQLException {
         String sql =
-            "SELECT o.*, a.FullName AS CustomerName " +
+            "SELECT o.*, a.FullName AS CustomerName, " +
+            "       STUFF((SELECT ', ' + p.ProductName " +
+            "              FROM OrderDetail od " +
+            "              JOIN Product p ON od.ProductID = p.ProductID " +
+            "              WHERE od.OrderID = o.OrderID " +
+            "              FOR XML PATH('')), 1, 2, '') AS ProductName " +
             "FROM [Order] o JOIN Account a ON o.AccountID=a.AccountID " +
             (status >= 0 ? "WHERE o.Status=? " : "") +
             "ORDER BY o.OrderDate DESC";
@@ -297,6 +312,7 @@ public class OrderDAO extends DBContext {
                 o.setOrderID(rs.getInt("OrderID"));
                 o.setAccountID(rs.getInt("AccountID"));
                 o.setCustomerName(rs.getString("CustomerName"));
+                o.setProductName(rs.getString("ProductName"));
                 o.setOrderDate(rs.getTimestamp("OrderDate"));
                 o.setTotalAmount(rs.getBigDecimal("TotalAmount"));
                 BigDecimal discount = rs.getBigDecimal("DiscountAmount");

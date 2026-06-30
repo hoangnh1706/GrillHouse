@@ -31,7 +31,8 @@ public class OrderHistoryServlet extends HttpServlet {
                 // Lọc theo status: lấy tất cả rồi filter
                 orders = new java.util.ArrayList<>();
                 for (model.Order o : orderDAO.getByAccount(acc.getAccountID())) {
-                    if (o.getStatus() == Integer.parseInt(statusParam)) orders.add(o);
+                    if (o.getStatus() == Integer.parseInt(statusParam))
+                        orders.add(o);
                 }
             } else {
                 orders = orderDAO.getByAccount(acc.getAccountID());
@@ -39,7 +40,8 @@ public class OrderHistoryServlet extends HttpServlet {
             // Load thêm details (danh sách món) cho từng đơn để hiện nút Feedback
             for (model.Order o : orders) {
                 model.Order full = orderDAO.getByID(o.getOrderID());
-                if (full != null) o.setDetails(full.getDetails());
+                if (full != null)
+                    o.setDetails(full.getDetails());
             }
             req.setAttribute("orders", orders);
 

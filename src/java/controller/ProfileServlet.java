@@ -6,9 +6,17 @@ import model.Account;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.Part;
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.UUID;
 import java.io.IOException;
 
 @WebServlet("/profile")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024,
+                 maxFileSize = 1024 * 1024 * 5, 
+                 maxRequestSize = 1024 * 1024 * 5 * 5)
 public class ProfileServlet extends HttpServlet {
 
     private final AccountDAO accountDAO = new AccountDAO();
@@ -47,6 +55,24 @@ public class ProfileServlet extends HttpServlet {
                 String fullName = req.getParameter("fullName");
                 String phone    = req.getParameter("phone");
                 String address  = req.getParameter("address");
+                String avatar   = acc.getAvatar(); // Giữ avatar cũ mặc định
+
+                // Xử lý upload file avatar
+                Part filePart = req.getPart("avatarFile");
+                if (filePart != null && filePart.getSize() > 0) {
+                    String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                    String ext = "";
+                    if (fileName.contains(".")) {
+                        ext = fileName.substring(fileName.lastIndexOf("."));
+                    }
+                    String newFileName = UUID.randomUUID().toString() + ext;
+                    String uploadPath = req.getServletContext().getRealPath("") + File.separator + "images" + File.separator + "avatars";
+                    File uploadDir = new File(uploadPath);
+                    if (!uploadDir.exists()) uploadDir.mkdirs();
+                    
+                    filePart.write(uploadPath + File.separator + newFileName);
+                    avatar = req.getContextPath() + "/images/avatars/" + newFileName;
+                }
 
                 // Họ tên bắt buộc không được để trống
                 if (fullName == null || fullName.trim().isEmpty()) {
@@ -59,6 +85,7 @@ public class ProfileServlet extends HttpServlet {
                 acc.setFullName(fullName.trim());
                 acc.setPhone(phone != null ? phone.trim() : "");
                 acc.setAddress(address != null ? address.trim() : "");
+                acc.setAvatar(avatar);
 
                 boolean ok = accountDAO.updateProfile(acc);
                 if (ok) {

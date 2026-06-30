@@ -4,6 +4,8 @@
     <html lang="vi">
 
     <head>
+  <!-- ======================== HEAD BLOCK ======================== -->
+  <!-- Khai báo meta, title và các thư viện CSS/Font -->
       <meta charset="UTF-8">
       <title>${empty product ? 'Thêm món' : 'Sửa món'} – Admin</title>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,15 +13,23 @@
     </head>
 
     <body>
+  <!-- ======================== BODY BLOCK ======================== -->
+  <!-- Khung giao diện chính form thêm/sửa món ăn -->
       <div class="sidebar">
-        <div class="logo">⚙️ Admin Panel</div>
-        <a href="${pageContext.request.contextPath}/admin/home">📊 Dashboard</a>
-        <a href="${pageContext.request.contextPath}/admin/products" class="active">🍖 Món ăn</a>
-        <a href="${pageContext.request.contextPath}/admin/orders">📦 Đơn hàng</a>
-        <a href="${pageContext.request.contextPath}/home" style="margin-top:2rem;">← Về trang chủ</a>
+        <!-- ======================== SIDEBAR BLOCK ======================== -->
+        <!-- Menu điều hướng bên trái dành cho Admin -->
+        <div class="logo"> Admin Panel</div>
+        <a href="${pageContext.request.contextPath}/admin/home"> Dashboard</a>
+        <a href="${pageContext.request.contextPath}/admin/products" class="active"> Món ăn</a>
+        <a href="${pageContext.request.contextPath}/admin/orders"> Đơn hàng</a>
+        <a href="${pageContext.request.contextPath}/admin/feedback" > Feedback</a>
+        <a href="${pageContext.request.contextPath}/admin/chatbot"> Chatbot</a>
+        <a href="${pageContext.request.contextPath}/logout" style="margin-top:2rem;">← Đăng xuất</a>
       </div>
 
       <div class="main">
+        <!-- ======================== MAIN CONTENT BLOCK ======================== -->
+        <!-- Form nhập thông tin chi tiết của món ăn -->
         <a href="${pageContext.request.contextPath}/admin/products" class="btn-back">← Quay lại danh sách</a>
         <div class="card">
           <h1>${empty product ? '➕ Thêm món ăn' : '✏️ Sửa món ăn'}</h1>
@@ -38,7 +48,7 @@
               </c:forEach>
             </select>
 
-            <label>Tên món *</label>
+            <label>Tên món </label>
             <input type="text" name="productName" value="${product.productName}" required>
 
             <label>Mô tả</label>
@@ -46,18 +56,18 @@
 
             <div class="row2">
               <div>
-                <label>Giá gốc (VNĐ) *</label>
+                <label>Giá gốc (VND) </label>
                 <input type="number" name="price" value="${product.price}" min="0" step="1000" required>
               </div>
               <div>
-                <label>Giá khuyến mãi (để trống nếu không)</label>
+                <label>Giá khuyến mãi </label>
                 <input type="number" name="salePrice" value="${product.salePrice}" min="0" step="1000">
               </div>
             </div>
 
             <div class="row2">
               <div>
-                <label>Tồn kho *</label>
+                <label>Tồn kho </label>
                 <input type="number" name="stock" value="${empty product ? '0' : product.stock}" min="0" required>
               </div>
               <div>
